@@ -16,7 +16,8 @@ X-chkp-sid: {{login.response.body.sid}}
 
 {
     "name": "NSG Network",
-    "show-as-ranges": true
+    "show-as-ranges": false,
+    "use-object-dictionary": true
 }
 ###
 
