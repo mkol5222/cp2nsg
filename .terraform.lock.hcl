@@ -5,6 +5,7 @@ provider "registry.terraform.io/checkpointsw/checkpoint" {
   version     = "2.6.0"
   constraints = "2.6.0"
   hashes = [
+    "h1:72scGQ+rr1fKyJl5gxgZU7gwIERuBj3667jFeFRa3K0=",
     "h1:7CB8HFSWTIBd2YgmpIU1oNqm8IxbV7UwomzpproIPLM=",
     "zh:24dd6ba6af8391bc2cfe20e0c7bbb88dddccfffd3df4a800cb982264d113bb37",
     "zh:260afe90961480d860b1c5e6fea98fa0e4faaa67b40874bde4ba47cdd4342810",

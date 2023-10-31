@@ -1,190 +1,209 @@
-console.log('cp2nsg');
+const DEMO_FILE = "./data/2nsgs-access-rulebase.json";
 
-async function loadCpRulebase() {
-    // const ruleBaseText = await Deno.readTextFile("./data/nsg-access-rulebase.json");
-    const ruleBaseText = await Deno.readTextFile("./data/2nsgs-access-rulebase.json");
-    // console.log(ruleBaseText);
+/**
+ * Loads raw rulebase from show access-rulebase API response
+ * @param {string} filename
+ * @returns { {rulebase: [ any ], objectsByUid: { [uid: string]: any; }} } Parsed raw access rulebase and objects by uid
+ */
+async function loadCpRulebase(filename: string) {
+  try {
+    const ruleBaseText = await Deno.readTextFile(filename);
 
-    try {
-        const rulebase = JSON.parse(ruleBaseText);
-        //console.log(rulebase);
-        return rulebase;
-    } catch (err) {
-        console.error("Error parsing rulebase:", err)
-    }
-    return null;
-}
+    const rulebase = JSON.parse(ruleBaseText);
 
-function processObjects(rulebase) {
-    // console.log(rulebase["objects-dictionary"])
-    const services = {};
-
-
-    return {
-        services
-    }
-}
-
-function processAction(actionUid, rawObjectsDict) {
-    const action = rawObjectsDict[actionUid]
-
-    return action.name;
-}
-
-function processService(serviceUid, rawObjectsDict) {
-
-    const service = rawObjectsDict[serviceUid];
-
-    if (service.type === 'CpmiAnyObject' && service.name === 'Any') return '*';
-    if (service.type === 'service-tcp') return `${service.port}/tcp`;
-    if (service.type === 'service-udp') return `${service.port}/udp`;
-    return service;
-
-}
-
-function processNetworkObject(networkObjectId, rawObjectsDict) {
-    const networkObject = rawObjectsDict[networkObjectId];
-
-    if (networkObject.type === 'CpmiAnyObject' && networkObject.name === 'Any') return '*'
-    if (networkObject.type === 'host') return `${networkObject["ipv4-address"]}/32`
-    if (networkObject.type === 'network') return `${networkObject["subnet4"]}/${networkObject["mask-length4"]}`
-    return networkObject
-}
-
-function processRules(rulebase, objects) {
     const rawObjects = rulebase["objects-dictionary"];
-    // console.log('rawObjects', rawObjects);
-    const rawObjectsDict = rawObjects.reduce((acc, obj) => {
-        acc[obj.uid] = obj;
-        return acc;
-    }, {});
-    // console.log('rawObjectsDict', rawObjectsDict);
 
-    const rules = rulebase["rulebase"].reduce(
-        (acc, rule) => {
-            if (rule.type === 'access-section') {
-                for (const r of rule.rulebase) {
-                    acc.push(r)
-                }
-            }
-            if (rule.type === 'access-rule') acc.push(rule);
-            return acc;
-        }, []
-    )
-    // console.log('rules', rules)
+    // organize objects by uid for easier access
+    const objectsByUid = rawObjects.reduce(
+      (objectDict: { [uid: string]: any }, obj: any) => {
+        objectDict[obj.uid] = obj;
+        return objectDict;
+      },
+      {},
+    );
 
-    const allSources = Array.from(new Set(
-        rules.reduce((acc, rule) => {
-            // console.log('rule source', rule.source);
-            rule.source.forEach(source => acc.push(source));
-            // console.log('acc', acc);
-            return acc;
-        }, [])
-    ));
-    // console.log('allSources', allSources);
+    return { rulebase, objectsByUid };
+  } catch (err) {
+    console.error("Error loading/parsing rulebase:", err);
+  }
+  return null;
+}
 
-    const allDestinations = Array.from(new Set(
-        rules.reduce((acc, rule) => {
-            rule.destination.forEach(destination => acc.push(destination));
-            return acc;
-        }, [])
-    ));
-    // console.log('allDestinations', allDestinations);
+function processAction(actionUid, objectsByUid) {
+  const action = objectsByUid[actionUid];
 
-    const allSorceNsgs = Array.from(new Set(
-        allSources.map(source => {
-            // console.log('source', source, rawObjectsDict[source]);
-            return rawObjectsDict[source];
-        })
-            .filter(o => o.type === "group" && o.name.startsWith("NSG_"))
-            .map(o => o.name.slice(4))
-    ));
-    // console.log(allSorceNsgs);
+  return action.name;
+}
 
-    const allDestinationNsgs = Array.from(new Set(
-        allDestinations.map(dst => {
-            return rawObjectsDict[dst];
-        })
-            .filter(o => o.type === "group" && o.name.startsWith("NSG_"))
-            .map(o => o.name.slice(4))
-    ));
-    // console.log(allDestinationNsgs);
+function processService(serviceUid, objectsByUid) {
+  const service = objectsByUid[serviceUid];
 
-    const allNsgs = Array.from(new Set([...allSorceNsgs, ...allDestinationNsgs]));
-    //console.log(allNsgs);
+  if (service.type === "CpmiAnyObject" && service.name === "Any") return "*";
+  if (service.type === "service-tcp") return `${service.port}/tcp`;
+  if (service.type === "service-udp") return `${service.port}/udp`;
+  return service;
+}
 
-    for (const rule of rulebase["rulebase"]) {
-        // console.log(rule);
-    }
+function processNetworkObject(networkObjectId, objectsByUid) {
+  const networkObject = objectsByUid[networkObjectId];
 
-    const nsgRulebases = allNsgs.reduce((acc, nsg) => {
-        console.log('processing NSG rulebase', nsg)
-        const nsgOutgoingRules = rules.filter(rule => {
-            const sourceObjectNames = rule.source.map(source => rawObjectsDict[source].name);
-            // console.log(sourceObjectNames)
-            return sourceObjectNames.includes(`NSG_${nsg}`);
-        }).map(rule => {
-            rule.nsg_Direction = 'Outbound';
-            rule.nsg_Services = rule.service.map(service => {
-                return processService(service, rawObjectsDict)
-            })
-            rule.nsg_Addresses = rule.destination.map(destination => processNetworkObject(destination, rawObjectsDict));
-            rule.nsg_Action = processAction(rule.action, rawObjectsDict)
-            return rule;
-        });
+  if (networkObject.type === "CpmiAnyObject" && networkObject.name === "Any") {
+    return "*";
+  }
+  if (networkObject.type === "host") {
+    return `${networkObject["ipv4-address"]}/32`;
+  }
+  if (networkObject.type === "network") {
+    return `${networkObject["subnet4"]}/${networkObject["mask-length4"]}`;
+  }
+  if (networkObject.type === "group" && networkObject.name.startsWith("NSG_")) {
+    return "*";
+  }
 
-        const nsgIncomingRules = rules.filter(rule => {
-            const destinationObjectNames = rule.destination
-                .map(destination => rawObjectsDict[destination].name);
-            // console.log(destinationObjectNames)
-            return destinationObjectNames.includes(`NSG_${nsg}`);
-        }).map(rule => {
-            rule.nsg_Direction = 'Inbound';
-            rule.nsg_Services = rule.service.map(service => {
-                return processService(service, rawObjectsDict)
-            })
-            rule.nsg_Addresses = rule.source.map(source => processNetworkObject(source, rawObjectsDict));
-            rule.nsg_Action = processAction(rule.action, rawObjectsDict)
-            return rule;
-        });
+  return networkObject;
+}
 
-        // for (const rule of [...nsgOutgoingRules, ...nsgIncomingRules]) {
-        //     console.log(`${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_Addresses)} ${JSON.stringify(rule.nsg_Services)}`);
-        // }
+/**
+ * Converts rulebase to flat array of rules (e.g. by visiting all sections)
+ * @param {any} rulebase
+ * @returns { [any] } Array of access rules
+ */
+function flatRules(rulebase: any): [any] {
+  // start from top rulebase top level
+  const rules = rulebase["rulebase"].reduce(
+    (rules: [any], rule: any) => {
+      // visiting every every section and collecting all rules
+      if (rule.type === "access-section") {
+        for (const r of rule.rulebase) {
+          rules.push(r);
+        }
+      }
+      // collect top level rules
+      if (rule.type === "access-rule") rules.push(rule);
+      return rules;
+    },
+    [],
+  );
+  return rules;
+}
 
-         acc[nsg] =  { nsgOutgoingRules, nsgIncomingRules };
-         return acc
-    }, {})
+function nsgsFromObjectUids(objectUids, objectsByUid) {
+  return unique(
+    objectUids
+      .map((uid) => objectsByUid[uid]) // get objects by uid
+      .filter((o) => o.type === "group" && o.name.startsWith("NSG_")) // network group name starts with NSG_
+      .map((o) => o.name.slice(4)), // remove NSG_ prefix
+  );
+}
 
-    console.log('Processing done');
+function processRule(rule, direction, objectsByUid) {
+  const ruleData = {};
 
-    return {
-        allNsgs,
-        nsgRulebases
-    }
+  ruleData.nsg_Direction = direction;
+
+  ruleData.nsg_Services = rule.service.map((service) => {
+    return processService(service, objectsByUid);
+  });
+
+  ruleData.nsg_SourceAddresses = rule.source.map((source) =>
+    processNetworkObject(source, objectsByUid)
+  );
+
+  ruleData.nsg_DestinationAddresses = rule.destination.map((destination) =>
+    processNetworkObject(destination, objectsByUid)
+  );
+
+  ruleData.nsg_Action = processAction(rule.action, objectsByUid);
+
+  ruleData.nsg_RuleNo = rule["rule-number"] + 100;
+
+  return ruleData;
+}
+
+function unique(array) {
+  return Array.from(new Set(array));
+}
+
+function uidsIncludeNSG(uids, nsgName, objectsByUid) {
+  return uids.map((uid) => objectsByUid[uid].name).includes(`NSG_${nsgName}`);
+}
+
+function processRules(rulebase, objectsByUid) {
+  const rules = flatRules(rulebase);
+
+  // need all sources and all destination UIDs to find NSG names
+  const allSources = unique(rules.flatMap((rule) => rule.source));
+  const allDestinations = unique(rules.flatMap((rule) => rule.destination));
+
+  // NSG names
+  const allSorceNsgs = nsgsFromObjectUids(allSources, objectsByUid);
+  const allDestinationNsgs = nsgsFromObjectUids(allDestinations, objectsByUid);
+  const allNsgs = unique([...allSorceNsgs, ...allDestinationNsgs]);
+
+  // process all NGSs into rulebases
+  const nsgRulebases = allNsgs.map((nsgName) => {
+    console.log("processing NSG rulebase", nsgName);
+
+    const nsgOutgoingRules = rules
+      .filter((rule) => uidsIncludeNSG(rule.source, nsgName, objectsByUid)) // nsgName in source
+      .map((rule) => processRule(rule, "Outbond", objectsByUid));
+
+    const nsgIncomingRules = rules.filter((rule) => {
+      const destinationObjectNames = rule.destination
+        .map((destination) => objectsByUid[destination].name);
+      // console.log(destinationObjectNames)
+      return destinationObjectNames.includes(`NSG_${nsgName}`);
+    }).map((rule) => processRule(rule, "Inbound", objectsByUid));
+
+    // for (const rule of [...nsgOutgoingRules, ...nsgIncomingRules]) {
+    //     console.log(`${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_Addresses)} ${JSON.stringify(rule.nsg_Services)}`);
+    // }
+
+    return { nsgName, nsgOutgoingRules, nsgIncomingRules };
+  });
+
+  console.log("Processing done");
+
+  return {
+    allNsgs,
+    nsgRulebases,
+  };
 }
 
 function printRules(rules) {
-    for (const rule of rules) {
-        console.log(`${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_Addresses)} ${JSON.stringify(rule.nsg_Services)} ${rule.nsg_Action}`);
-    }
+  for (const rule of rules) {
+    console.log(
+      `${rule.nsg_RuleNo} ${rule.nsg_Direction}: ${
+        JSON.stringify(rule.nsg_SourceAddresses)
+      } -> ${JSON.stringify(rule.nsg_DestinationAddresses)} ${
+        JSON.stringify(rule.nsg_Services)
+      } ${rule.nsg_Action}`,
+    );
+  }
 }
 
-const rulebase = await loadCpRulebase();
-// console.log(rulebase);
+async function main() {
+  console.log("cp2nsg\n");
 
-const objects = processObjects(rulebase);
+  const rulebaseData = await loadCpRulebase(DEMO_FILE);
+  if (!rulebaseData) {
+    console.error("Failed to load rulebase data");
+    return;
+  }
 
-const rules = processRules(rulebase, objects);
-//console.log(rules);
+  const { rulebase, objectsByUid } = rulebaseData!;
 
+  const rules = processRules(rulebase, objectsByUid);
 
-for (const [nsg, nsgData] of Object.entries(rules.nsgRulebases)) {
-    console.log('');
-    console.log(nsg);
+  for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
+    console.log("");
+    console.log(`${nsgIndex}. ${nsgData.nsgName}`);
     //console.log(nsgData);
-    printRules(nsgData.nsgIncomingRules)
-    printRules(nsgData.nsgOutgoingRules)
+    printRules(nsgData.nsgIncomingRules);
+    printRules(nsgData.nsgOutgoingRules);
+  }
+
+  //console.log(rules.nsgRulebases)
 }
 
-//console.log(rules.nsgRulebases)
+await main();
