@@ -39,8 +39,8 @@ function processService(serviceUid, objectsByUid) {
   const service = objectsByUid[serviceUid];
 
   if (service.type === "CpmiAnyObject" && service.name === "Any") return "*";
-  if (service.type === "service-tcp") return `${service.port}/tcp`;
-  if (service.type === "service-udp") return `${service.port}/udp`;
+  if (service.type === "service-tcp") return `${service.port}/Tcp`;
+  if (service.type === "service-udp") return `${service.port}/Udp`;
   return service;
 }
 
@@ -96,7 +96,7 @@ function nsgsFromObjectUids(objectUids, objectsByUid) {
   );
 }
 
-function processRule(rule, direction, objectsByUid) {
+function processRule(rule, direction, nsgName, objectsByUid) {
   const ruleData = {};
 
   ruleData.nsg_Direction = direction;
@@ -114,8 +114,13 @@ function processRule(rule, direction, objectsByUid) {
   );
 
   ruleData.nsg_Action = processAction(rule.action, objectsByUid);
+  ruleData.nsg_Action = ruleData.nsg_Action === "Accept" ? "Allow" : "Deny";
 
-  ruleData.nsg_RuleNo = rule["rule-number"] + 100;
+  ruleData.nsg_RuleNo = rule["rule-number"];
+
+  ruleData.nsg_NsgName = nsgName;
+
+  ruleData.nsg_Description = rule.name;
 
   return ruleData;
 }
@@ -142,18 +147,15 @@ function processRules(rulebase, objectsByUid) {
 
   // process all NGSs into rulebases
   const nsgRulebases = allNsgs.map((nsgName) => {
-    console.log("processing NSG rulebase", nsgName);
+    // console.log("processing NSG rulebase", nsgName);
 
     const nsgOutgoingRules = rules
       .filter((rule) => uidsIncludeNSG(rule.source, nsgName, objectsByUid)) // nsgName in source
-      .map((rule) => processRule(rule, "Outbond", objectsByUid));
+      .map((rule) => processRule(rule, "Outbound", nsgName, objectsByUid));
 
-    const nsgIncomingRules = rules.filter((rule) => {
-      const destinationObjectNames = rule.destination
-        .map((destination) => objectsByUid[destination].name);
-      // console.log(destinationObjectNames)
-      return destinationObjectNames.includes(`NSG_${nsgName}`);
-    }).map((rule) => processRule(rule, "Inbound", objectsByUid));
+    const nsgIncomingRules = rules
+      .filter((rule) => uidsIncludeNSG(rule.destination, nsgName, objectsByUid)) // nsgName in dst
+      .map((rule) => processRule(rule, "Inbound", nsgName, objectsByUid));
 
     // for (const rule of [...nsgOutgoingRules, ...nsgIncomingRules]) {
     //     console.log(`${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_Addresses)} ${JSON.stringify(rule.nsg_Services)}`);
@@ -162,7 +164,7 @@ function processRules(rulebase, objectsByUid) {
     return { nsgName, nsgOutgoingRules, nsgIncomingRules };
   });
 
-  console.log("Processing done");
+  // console.log("Processing done");
 
   return {
     allNsgs,
@@ -177,13 +179,13 @@ function printRules(rules) {
         JSON.stringify(rule.nsg_SourceAddresses)
       } -> ${JSON.stringify(rule.nsg_DestinationAddresses)} ${
         JSON.stringify(rule.nsg_Services)
-      } ${rule.nsg_Action}`,
+      } ${rule.nsg_Action} // ${rule.nsg_Description}`,
     );
   }
 }
 
 async function main() {
-  console.log("cp2nsg\n");
+  console.log("# cp2nsg\n");
 
   const rulebaseData = await loadCpRulebase(DEMO_FILE);
   if (!rulebaseData) {
@@ -195,15 +197,113 @@ async function main() {
 
   const rules = processRules(rulebase, objectsByUid);
 
+  //   for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
+  //     console.log("");
+  //     console.log(`${nsgIndex}. ${nsgData.nsgName}`);
+  //     //console.log(nsgData);
+  //     printRules(nsgData.nsgIncomingRules);
+  //     printRules(nsgData.nsgOutgoingRules);
+  //   }
+
+  generateTerraform(rules);
+  //console.log(rules.nsgRulebases)
+}
+
+function servicesByProtocol(services) {
+  const serviceObjects = services.map((service) => ({
+    proto: service.split("/")[1],
+    port: parseInt(service.split("/")[0]),
+  }));
+  return Object.entries(Object.groupBy(serviceObjects, ({ proto }) => proto))
+    .map(([proto, services]) => ({
+      proto,
+      ports: services.map(({ port }) => port),
+    }));
+}
+
+function generateTerraformNSGRules(rules) {
+  let priority = 100;
+  for (const rule of rules) {
+    //console.log(rule);
+
+    const servicesByProto = servicesByProtocol(rule.nsg_Services);
+    // console.log('servicesByProto', servicesByProto);
+
+    for (const [index, portsByProto] of Object.entries<any>(servicesByProto)) {
+      // console.log("proto", index, portsByProto.proto, portsByProto.ports);
+
+      const ruleNo = priority++;
+
+      let ports = "*";
+      let proto = "Any";
+
+      if ( portsByProto.proto !== "undefined") {
+        ports = portsByProto.ports.join(",");
+        proto = portsByProto.proto;
+      }
+      // console.log('service ports', ports, proto, servicesByProto);
+
+      let destination = `destination_address_prefixes= ${
+        JSON.stringify(rule.nsg_DestinationAddresses)
+      }
+      `;
+      if (rule.nsg_DestinationAddresses.length === 1) {
+        destination = `destination_address_prefix= "${rule.nsg_DestinationAddresses[0]}" `;
+      }
+
+      let source = `source_address_prefixes     = ${
+        JSON.stringify(rule.nsg_SourceAddresses)
+      }
+      `;
+      if (rule.nsg_SourceAddresses.length === 1) {
+        source = `source_address_prefix= "${rule.nsg_SourceAddresses[0]}" `;
+      }
+
+      // name                        = "${rule.nsg_Description}"
+      console.log(`
+        resource "azurerm_network_security_rule" "${rule.nsg_NsgName}_${ruleNo}_${rule.nsg_Direction}_${proto}" {
+
+            name = "${rule.nsg_NsgName}_${ruleNo}_${rule.nsg_Direction}_${proto}"
+            priority                    = ${ruleNo}
+            direction                   = "${rule.nsg_Direction}"
+            access                      = "${rule.nsg_Action}"
+            protocol                    = "${proto === 'Any' ? '*' : proto}"
+            source_port_range           = "*"
+            destination_port_range      = "${ports}"
+            ${source}
+            ${destination}
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.${rule.nsg_NsgName}.name
+
+        }
+        `);
+    }
+  }
+}
+
+function generateTerraform(rules) {
+  console.log(`
+    resource "azurerm_resource_group" "example" {
+        name     = "nsg-example-resources"
+        location = "West Europe"
+      }
+    `);
+
   for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
     console.log("");
-    console.log(`${nsgIndex}. ${nsgData.nsgName}`);
-    //console.log(nsgData);
-    printRules(nsgData.nsgIncomingRules);
-    printRules(nsgData.nsgOutgoingRules);
-  }
+    console.log(`# ${nsgIndex}. ${nsgData.nsgName}`);
 
-  //console.log(rules.nsgRulebases)
+    console.log(` 
+      resource "azurerm_network_security_group" "${nsgData.nsgName}" {
+        name                = "${nsgData.nsgName}"
+        location            = azurerm_resource_group.example.location
+        resource_group_name = azurerm_resource_group.example.name
+      }
+        `);
+
+    generateTerraformNSGRules(nsgData.nsgIncomingRules);
+    generateTerraformNSGRules(nsgData.nsgOutgoingRules);
+  }
 }
 
 await main();
