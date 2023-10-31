@@ -234,11 +234,11 @@ function generateTerraformNSGRules(rules) {
 
       const ruleNo = priority++;
 
-      let ports = "*";
+      let ports = ["*"];
       let proto = "Any";
 
       if ( portsByProto.proto !== "undefined") {
-        ports = portsByProto.ports.join(",");
+        ports = portsByProto.ports;
         proto = portsByProto.proto;
       }
       // console.log('service ports', ports, proto, servicesByProto);
@@ -259,6 +259,11 @@ function generateTerraformNSGRules(rules) {
         source = `source_address_prefix= "${rule.nsg_SourceAddresses[0]}" `;
       }
 
+      let portSpec = `destination_port_ranges      = ${JSON.stringify(ports)}`;
+      if (ports.length === 1) {
+        portSpec = `destination_port_range      = ${JSON.stringify(ports[0])}`;
+      }
+        
       // name                        = "${rule.nsg_Description}"
       console.log(`
         resource "azurerm_network_security_rule" "${rule.nsg_NsgName}_${ruleNo}_${rule.nsg_Direction}_${proto}" {
@@ -269,7 +274,7 @@ function generateTerraformNSGRules(rules) {
             access                      = "${rule.nsg_Action}"
             protocol                    = "${proto === 'Any' ? '*' : proto}"
             source_port_range           = "*"
-            destination_port_range      = "${ports}"
+            ${portSpec}
             ${source}
             ${destination}
             resource_group_name         = azurerm_resource_group.example.name

@@ -24,7 +24,7 @@
             access                      = "Allow"
             protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = "22,3389"
+            destination_port_ranges      = [22,3389]
             source_address_prefixes     = ["192.168.1.0/24","194.228.2.1/32"]
       
             destination_address_prefix= "*" 
@@ -42,7 +42,7 @@
             access                      = "Allow"
             protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = "80,443"
+            destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
             resource_group_name         = azurerm_resource_group.example.name
@@ -59,7 +59,7 @@
             access                      = "Deny"
             protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = "22,3389"
+            destination_port_ranges      = [22,3389]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
             resource_group_name         = azurerm_resource_group.example.name
@@ -119,7 +119,7 @@
             access                      = "Allow"
             protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = "80,443"
+            destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
             resource_group_name         = azurerm_resource_group.example.name
@@ -153,7 +153,7 @@
             access                      = "Allow"
             protocol                    = "Udp"
             source_port_range           = "*"
-            destination_port_range      = "123"
+            destination_port_range      = 123
             source_address_prefix= "*" 
             destination_address_prefix= "195.113.144.201/32" 
             resource_group_name         = azurerm_resource_group.example.name
@@ -170,7 +170,7 @@
             access                      = "Allow"
             protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = "123"
+            destination_port_range      = 123
             source_address_prefix= "*" 
             destination_address_prefix= "195.113.144.201/32" 
             resource_group_name         = azurerm_resource_group.example.name
@@ -187,7 +187,7 @@
             access                      = "Allow"
             protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = "80,443"
+            destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
             resource_group_name         = azurerm_resource_group.example.name
