@@ -1,7 +1,8 @@
 console.log('cp2nsg');
 
 async function loadCpRulebase() {
-    const ruleBaseText = await Deno.readTextFile("./data/nsg-access-rulebase.json");
+    // const ruleBaseText = await Deno.readTextFile("./data/nsg-access-rulebase.json");
+    const ruleBaseText = await Deno.readTextFile("./data/2nsgs-access-rulebase.json");
     // console.log(ruleBaseText);
 
     try {
@@ -36,6 +37,7 @@ function processService(serviceUid, rawObjectsDict) {
 
     if (service.type === 'CpmiAnyObject' && service.name === 'Any') return '*';
     if (service.type === 'service-tcp') return `${service.port}/tcp`;
+    if (service.type === 'service-udp') return `${service.port}/udp`;
     return service;
 
 }
@@ -58,7 +60,18 @@ function processRules(rulebase, objects) {
     }, {});
     // console.log('rawObjectsDict', rawObjectsDict);
 
-    const rules = rulebase["rulebase"];
+    const rules = rulebase["rulebase"].reduce(
+        (acc, rule) => {
+            if (rule.type === 'access-section') {
+                for (const r of rule.rulebase) {
+                    acc.push(r)
+                }
+            }
+            if (rule.type === 'access-rule') acc.push(rule);
+            return acc;
+        }, []
+    )
+    // console.log('rules', rules)
 
     const allSources = Array.from(new Set(
         rules.reduce((acc, rule) => {
@@ -98,14 +111,14 @@ function processRules(rulebase, objects) {
     // console.log(allDestinationNsgs);
 
     const allNsgs = Array.from(new Set([...allSorceNsgs, ...allDestinationNsgs]));
-    // console.log(allNsgs);
+    //console.log(allNsgs);
 
     for (const rule of rulebase["rulebase"]) {
         // console.log(rule);
     }
 
     const nsgRulebases = allNsgs.reduce((acc, nsg) => {
-
+        console.log('processing NSG rulebase', nsg)
         const nsgOutgoingRules = rules.filter(rule => {
             const sourceObjectNames = rule.source.map(source => rawObjectsDict[source].name);
             // console.log(sourceObjectNames)
@@ -139,8 +152,11 @@ function processRules(rulebase, objects) {
         //     console.log(`${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_Addresses)} ${JSON.stringify(rule.nsg_Services)}`);
         // }
 
-        return acc[nsg] = { [nsg]: { nsgOutgoingRules, nsgIncomingRules } };
+         acc[nsg] =  { nsgOutgoingRules, nsgIncomingRules };
+         return acc
     }, {})
+
+    console.log('Processing done');
 
     return {
         allNsgs,
@@ -166,6 +182,9 @@ const rules = processRules(rulebase, objects);
 for (const [nsg, nsgData] of Object.entries(rules.nsgRulebases)) {
     console.log('');
     console.log(nsg);
+    //console.log(nsgData);
     printRules(nsgData.nsgIncomingRules)
     printRules(nsgData.nsgOutgoingRules)
 }
+
+//console.log(rules.nsgRulebases)
