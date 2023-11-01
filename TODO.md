@@ -11,6 +11,7 @@
 - [x] allow to specify other policy package than default "NSG" - e.g. via --package option
 - [ ] handle self-signed API service certificate (other than deno run --unsafely-ignore-certificate-errors ) - https://medium.com/deno-the-complete-reference/3-ways-of-accepting-self-signed-certificates-in-deno-9c9286ab957
 - [x] handle group of services - e.g. dns
+- [x] add support for DevContainer/Codespaces
 
 - [ ] SmartConsole Extension to start "Install NSG" workflow
 - [ ] CI/CD pipeline managing changes to NSGs automatically (generate&commit to terraform apply)
