@@ -5,6 +5,13 @@
 - [x] fetch rulebase from live Security Management API vs file (--sc1 option and creds in .env file)
 - [x] skip disabled rules
 
+- [ ] support both Smart-1 Cloud (supported) as well as regular management API (to do)
+- [ ] support management API auth with user+pass too (vs. just API key)
+- [ ] handle policy package not found
+- [ ] allow to specify other policy package than default "NSG"
+- [ ] handle self-signed API service certificate (other than deno run --unsafely-ignore-certificate-errors )
+- [x] handle group of services - e.g. dns
+
 - [ ] SmartConsole Extension to start "Install NSG" workflow
 - [ ] CI/CD pipeline managing changes to NSGs automatically (generate&commit to terraform apply)
 

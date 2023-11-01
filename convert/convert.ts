@@ -50,7 +50,8 @@ async function loadPolicyFromS1C(packageName) {
         "name": `${packageName} Network`,
         "show-as-ranges": false,
         "use-object-dictionary": true,
-        "details-level": "full"
+        "details-level": "full",
+        "dereference-group-members": true
       }),
     });
     const rulebase = await showAccessRulebaseResponse.json();
@@ -116,13 +117,31 @@ function processAction(actionUid, objectsByUid) {
   return action.name;
 }
 
-function processService(serviceUid, objectsByUid) {
-  const service = objectsByUid[serviceUid];
+function processServiceObject(service, objectsByUid) {
 
+  console.log('# service', service.name, service.type);
+  
   if (service.type === "CpmiAnyObject" && service.name === "Any") return "*";
   if (service.type === "service-tcp") return `${service.port}/Tcp`;
   if (service.type === "service-udp") return `${service.port}/Udp`;
-  return service;
+
+  if (service.type === "service-group") {
+    const services = service.members.map((member) => processServiceObject(member, objectsByUid) );
+    // console.log('service group', services);
+    return services;
+  }
+
+  // console.error("Unknown service type", service.type, service.name);
+  // console.log('details:', JSON.stringify(service, null, 2));
+
+  return [service];
+
+}
+
+function processService(serviceUid, objectsByUid) {
+  const service = objectsByUid[serviceUid];
+  return processServiceObject(service, objectsByUid);
+  // console.log('service details:', JSON.stringify(service, null, 2));
 }
 
 function processNetworkObject(networkObjectId, objectsByUid) {
@@ -198,7 +217,7 @@ function processRule(rule, direction, nsgName, objectsByUid) {
 
   ruleData.nsg_Direction = direction;
 
-  ruleData.nsg_Services = rule.service.map((service) => {
+  ruleData.nsg_Services = rule.service.flatMap((service) => {
     return processService(service, objectsByUid);
   });
 

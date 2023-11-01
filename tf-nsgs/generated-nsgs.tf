@@ -7,39 +7,20 @@
       }
     
 
-# 0. Default
+# 0. demo1
  
-      resource "azurerm_network_security_group" "Default" {
-        name                = "Default"
+      resource "azurerm_network_security_group" "demo1" {
+        name                = "demo1"
         location            = azurerm_resource_group.example.location
-        resource_group_name = "rg-nsg-default"
+        resource_group_name = azurerm_resource_group.example.name
       }
         
-// RG for NSG Default is "rg-nsg-default"
+// RG for NSG demo1 is azurerm_resource_group.example.name
 
-        resource "azurerm_network_security_rule" "Default_100_Inbound_Tcp" {
+        resource "azurerm_network_security_rule" "demo1_100_Inbound_Tcp" {
 
-            name = "Default_100_Inbound_Tcp"
+            name = "demo1_100_Inbound_Tcp"
             priority                    = 100
-            direction                   = "Inbound"
-            access                      = "Allow"
-            protocol                    = "Tcp"
-            source_port_range           = "*"
-            destination_port_ranges      = [22,3389]
-            source_address_prefixes     = ["192.168.1.0/24","194.228.2.1/32","192.168.107.0/24"]
-      
-            destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
-
-        }
-        
-// RG for NSG Default is "rg-nsg-default"
-
-        resource "azurerm_network_security_rule" "Default_101_Inbound_Tcp" {
-
-            name = "Default_101_Inbound_Tcp"
-            priority                    = 101
             direction                   = "Inbound"
             access                      = "Deny"
             protocol                    = "Tcp"
@@ -47,98 +28,17 @@
             destination_port_ranges      = [22,3389]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.demo1.name
 
         }
         
-// RG for NSG Default is "rg-nsg-default"
+// RG for NSG demo1 is azurerm_resource_group.example.name
 
-        resource "azurerm_network_security_rule" "Default_102_Inbound_Any" {
+        resource "azurerm_network_security_rule" "demo1_101_Inbound_Tcp" {
 
-            name = "Default_102_Inbound_Any"
-            priority                    = 102
-            direction                   = "Inbound"
-            access                      = "Deny"
-            protocol                    = "*"
-            source_port_range           = "*"
-            destination_port_range      = "*"
-            source_address_prefix= "*" 
-            destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
-
-        }
-        
-// RG for NSG Default is "rg-nsg-default"
-
-        resource "azurerm_network_security_rule" "Default_100_Outbound_Tcp" {
-
-            name = "Default_100_Outbound_Tcp"
-            priority                    = 100
-            direction                   = "Outbound"
-            access                      = "Allow"
-            protocol                    = "Tcp"
-            source_port_range           = "*"
-            destination_port_ranges      = [389,636,80,443]
-            source_address_prefix= "*" 
-            destination_address_prefix= "AzureActiveDirectory" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
-
-        }
-        
-// RG for NSG Default is "rg-nsg-default"
-
-        resource "azurerm_network_security_rule" "Default_101_Outbound_Udp" {
-
-            name = "Default_101_Outbound_Udp"
+            name = "demo1_101_Inbound_Tcp"
             priority                    = 101
-            direction                   = "Outbound"
-            access                      = "Allow"
-            protocol                    = "Udp"
-            source_port_range           = "*"
-            destination_port_range      = 389
-            source_address_prefix= "*" 
-            destination_address_prefix= "AzureActiveDirectory" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
-
-        }
-        
-// RG for NSG Default is "rg-nsg-default"
-
-        resource "azurerm_network_security_rule" "Default_102_Outbound_Any" {
-
-            name = "Default_102_Outbound_Any"
-            priority                    = 102
-            direction                   = "Outbound"
-            access                      = "Allow"
-            protocol                    = "*"
-            source_port_range           = "*"
-            destination_port_range      = "*"
-            source_address_prefix= "*" 
-            destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
-
-        }
-        
-
-# 1. WebDemo
- 
-      resource "azurerm_network_security_group" "WebDemo" {
-        name                = "WebDemo"
-        location            = azurerm_resource_group.example.location
-        resource_group_name = "rg-nsg1"
-      }
-        
-// RG for NSG WebDemo is "rg-nsg1"
-
-        resource "azurerm_network_security_rule" "WebDemo_100_Inbound_Tcp" {
-
-            name = "WebDemo_100_Inbound_Tcp"
-            priority                    = 100
             direction                   = "Inbound"
             access                      = "Allow"
             protocol                    = "Tcp"
@@ -146,91 +46,17 @@
             destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg1"
-            network_security_group_name = azurerm_network_security_group.WebDemo.name
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.demo1.name
 
         }
         
-// RG for NSG WebDemo is "rg-nsg1"
+// RG for NSG demo1 is azurerm_resource_group.example.name
 
-        resource "azurerm_network_security_rule" "WebDemo_101_Inbound_Any" {
+        resource "azurerm_network_security_rule" "demo1_100_Outbound_Tcp" {
 
-            name = "WebDemo_101_Inbound_Any"
-            priority                    = 101
-            direction                   = "Inbound"
-            access                      = "Deny"
-            protocol                    = "*"
-            source_port_range           = "*"
-            destination_port_range      = "*"
-            source_address_prefix= "*" 
-            destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg1"
-            network_security_group_name = azurerm_network_security_group.WebDemo.name
-
-        }
-        
-// RG for NSG WebDemo is "rg-nsg1"
-
-        resource "azurerm_network_security_rule" "WebDemo_100_Outbound_Tcp" {
-
-            name = "WebDemo_100_Outbound_Tcp"
+            name = "demo1_100_Outbound_Tcp"
             priority                    = 100
-            direction                   = "Outbound"
-            access                      = "Allow"
-            protocol                    = "Tcp"
-            source_port_range           = "*"
-            destination_port_range      = 22
-            source_address_prefix= "*" 
-            destination_address_prefix= "VirtualNetwork" 
-            resource_group_name         = "rg-nsg1"
-            network_security_group_name = azurerm_network_security_group.WebDemo.name
-
-        }
-        
-// RG for NSG WebDemo is "rg-nsg1"
-
-        resource "azurerm_network_security_rule" "WebDemo_101_Outbound_Udp" {
-
-            name = "WebDemo_101_Outbound_Udp"
-            priority                    = 101
-            direction                   = "Outbound"
-            access                      = "Allow"
-            protocol                    = "Udp"
-            source_port_range           = "*"
-            destination_port_range      = 123
-            source_address_prefix= "*" 
-            destination_address_prefixes= ["195.113.144.201/32","195.113.144.23/32"]
-      
-            resource_group_name         = "rg-nsg1"
-            network_security_group_name = azurerm_network_security_group.WebDemo.name
-
-        }
-        
-// RG for NSG WebDemo is "rg-nsg1"
-
-        resource "azurerm_network_security_rule" "WebDemo_102_Outbound_Tcp" {
-
-            name = "WebDemo_102_Outbound_Tcp"
-            priority                    = 102
-            direction                   = "Outbound"
-            access                      = "Allow"
-            protocol                    = "Tcp"
-            source_port_range           = "*"
-            destination_port_range      = 123
-            source_address_prefix= "*" 
-            destination_address_prefixes= ["195.113.144.201/32","195.113.144.23/32"]
-      
-            resource_group_name         = "rg-nsg1"
-            network_security_group_name = azurerm_network_security_group.WebDemo.name
-
-        }
-        
-// RG for NSG WebDemo is "rg-nsg1"
-
-        resource "azurerm_network_security_rule" "WebDemo_103_Outbound_Tcp" {
-
-            name = "WebDemo_103_Outbound_Tcp"
-            priority                    = 103
             direction                   = "Outbound"
             access                      = "Allow"
             protocol                    = "Tcp"
@@ -238,8 +64,8 @@
             destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg1"
-            network_security_group_name = azurerm_network_security_group.WebDemo.name
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.demo1.name
 
         }
         
