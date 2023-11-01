@@ -20,8 +20,17 @@ async function loadPolicyFromS1C(packageName) {
   const env = await load();
   const cpserver = env["CPSERVER"] || 'use-yourownserver.local';
   const cptenant = env["CPTENANT"] || 'use-yourowntenant';
-  const cpapikey = env["CPAPIKEY"] || 'use-yourowntenant';
+  const cpapikey = env["CPAPIKEY"] || null;
+  const cpuser = env["CPUSER"] || 'use-yourowntenantuser';
+  const cppassword = env["CPPASSWORD"] || 'use-yourowntenantpass';
 
+
+  const cpCreds = cpapikey ? {
+    "api-key": cpapikey
+  } : {
+    "user": cpuser,
+    "password": cppassword
+  }
 
   const urlBase = `https://${cpserver}/${cptenant}/web_api/`;
   const loginUrl = `${urlBase}login`;
@@ -30,7 +39,9 @@ async function loadPolicyFromS1C(packageName) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ "api-key": cpapikey }),
+    body: JSON.stringify({ 
+      ...cpCreds
+    }),
   });
 
   const loginResponseJson = await loginResponse.json();
