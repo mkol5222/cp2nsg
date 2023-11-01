@@ -9,7 +9,7 @@
 - [x] support management API auth with user+pass too (vs. just API key)
 - [x] handle policy package not found
 - [x] allow to specify other policy package than default "NSG" - e.g. via --package option
-- [ ] handle self-signed API service certificate (other than deno run --unsafely-ignore-certificate-errors )
+- [ ] handle self-signed API service certificate (other than deno run --unsafely-ignore-certificate-errors ) - https://medium.com/deno-the-complete-reference/3-ways-of-accepting-self-signed-certificates-in-deno-9c9286ab957
 - [x] handle group of services - e.g. dns
 
 - [ ] SmartConsole Extension to start "Install NSG" workflow
