@@ -13,6 +13,7 @@ Usage:
 winget install -e DenoLand.Deno
 
 # create S1C creds .env file - see below
+code .env
 
 # fetch policy and save as Terraform code
 deno run --allow-net --allow-read .\convert\convert.ts --s1c | Set-Content .\tf-nsgs\generated-nsgs.tf
