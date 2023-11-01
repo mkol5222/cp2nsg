@@ -12,10 +12,10 @@
       resource "azurerm_network_security_group" "Default" {
         name                = "Default"
         location            = azurerm_resource_group.example.location
-        resource_group_name = azurerm_resource_group.example.name
+        resource_group_name = "rg-nsg-default"
       }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_100_Inbound_Tcp" {
 
@@ -26,15 +26,15 @@
             protocol                    = "Tcp"
             source_port_range           = "*"
             destination_port_ranges      = [22,3389]
-            source_address_prefixes     = ["192.168.1.0/24","194.228.2.1/32"]
+            source_address_prefixes     = ["192.168.1.0/24","194.228.2.1/32","192.168.107.0/24"]
       
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_101_Inbound_Tcp" {
 
@@ -47,12 +47,12 @@
             destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_102_Inbound_Tcp" {
 
@@ -65,12 +65,12 @@
             destination_port_ranges      = [22,3389]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_103_Inbound_Any" {
 
@@ -83,12 +83,12 @@
             destination_port_range      = "*"
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_100_Outbound_Tcp" {
 
@@ -101,12 +101,12 @@
             destination_port_ranges      = [389,636,80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "AzureActiveDirectory" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_101_Outbound_Udp" {
 
@@ -119,12 +119,12 @@
             destination_port_range      = 389
             source_address_prefix= "*" 
             destination_address_prefix= "AzureActiveDirectory" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }
         
-// RG for NSG Default is azurerm_resource_group.example.name
+// RG for NSG Default is "rg-nsg-default"
 
         resource "azurerm_network_security_rule" "Default_102_Outbound_Any" {
 
@@ -137,7 +137,7 @@
             destination_port_range      = "*"
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg-default"
             network_security_group_name = azurerm_network_security_group.Default.name
 
         }

@@ -149,7 +149,7 @@
         "enable-firewall-session" : false,
         "alert" : "none"
       },
-      "source" : [ "5a8d1edc-a1f8-4557-bb2c-8ec083a0a362", "47e93f5a-2f5e-49c9-b777-06f887417270" ],
+      "source" : [ "5a8d1edc-a1f8-4557-bb2c-8ec083a0a362", "47e93f5a-2f5e-49c9-b777-06f887417270", "1a433229-fe61-49a2-88f8-c848a378905a" ],
       "source-negate" : false,
       "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
       "destination-negate" : false,
@@ -174,8 +174,8 @@
         "lock" : "unlocked",
         "validation-state" : "ok",
         "last-modify-time" : {
-          "posix" : 1698734202409,
-          "iso-8601" : "2023-10-31T06:36+0000"
+          "posix" : 1698826896525,
+          "iso-8601" : "2023-11-01T08:21+0000"
         },
         "last-modifier" : "mkoldov@checkpoint.com",
         "creation-time" : {
@@ -788,6 +788,46 @@
     "display-name" : "Accept",
     "customFields" : null
   }, {
+    "uid" : "1a433229-fe61-49a2-88f8-c848a378905a",
+    "name" : "admin1_net",
+    "type" : "network",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "broadcast" : "allow",
+    "subnet4" : "192.168.107.0",
+    "mask-length4" : 24,
+    "subnet-mask" : "255.255.255.0",
+    "nat-settings" : {
+      "auto-rule" : false
+    },
+    "comments" : "",
+    "color" : "black",
+    "icon" : "NetworkObjects/network",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698826882778,
+        "iso-8601" : "2023-11-01T08:21+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698826882778,
+        "iso-8601" : "2023-11-01T08:21+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
     "uid" : "97aeb369-9aea-11d5-bd16-0090272ccb30",
     "name" : "Any",
     "type" : "CpmiAnyObject",
@@ -1218,13 +1258,46 @@
     "comments" : "",
     "color" : "black",
     "icon" : "General/group",
-    "tags" : [ ],
+    "tags" : [ {
+      "uid" : "6177433c-d3ba-431f-a4b0-b0c71915f169",
+      "name" : "RG:rg-nsg-default",
+      "type" : "tag",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "comments" : "",
+      "color" : "black",
+      "icon" : "Tags/Tag",
+      "tags" : [ ],
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698825477789,
+          "iso-8601" : "2023-11-01T07:57+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698825477789,
+          "iso-8601" : "2023-11-01T07:57+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "read-only" : false,
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "true"
+      }
+    } ],
     "meta-info" : {
       "lock" : "unlocked",
       "validation-state" : "ok",
       "last-modify-time" : {
-        "posix" : 1698733826493,
-        "iso-8601" : "2023-10-31T06:30+0000"
+        "posix" : 1698825481119,
+        "iso-8601" : "2023-11-01T07:58+0000"
       },
       "last-modifier" : "mkoldov@checkpoint.com",
       "creation-time" : {

@@ -1,8 +1,96 @@
+import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
+import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
+
+
+const flags = parse(Deno.args, {
+  boolean: ["help", "s1c"],
+  default: { color: true },
+});
+// console.log("Wants help?", flags.help);
+// console.log("Use s1c?", flags.s1c);
+
 // const DEMO_FILE = "./data/2nsgs-access-rulebase.json";
 const DEMO_FILE = "./data/servicetags-rulebase.json";
 
 const SERVICETAG_PREFIX = "ServiceTag_";
 const NSG_PREFIX = "NSG_";
+
+
+async function loadPolicyFromS1C(packageName) {
+  const env = await load();
+  const cpserver = env["CPSERVER"] || 'use-yourownserver.local';
+  const cptenant = env["CPTENANT"] || 'use-yourowntenant';
+  const cpapikey = env["CPAPIKEY"] || 'use-yourowntenant';
+
+
+  const urlBase = `https://${cpserver}/${cptenant}/web_api/`;
+  const loginUrl = `${urlBase}login`;
+  const loginResponse = await fetch(loginUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ "api-key": cpapikey }),
+  });
+
+  const loginResponseJson = await loginResponse.json();
+  // console.log('loginResponseJson', loginResponseJson);
+
+  const sid = loginResponseJson.sid;
+  if (sid) {
+    // fetch access rulebase
+    const showAccessRulebaseUrl = `${urlBase}show-access-rulebase`;
+    const showAccessRulebaseResponse = await fetch(showAccessRulebaseUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-chkp-sid": sid,
+      },
+      body: JSON.stringify({
+        "name": `${packageName} Network`,
+        "show-as-ranges": false,
+        "use-object-dictionary": true,
+        "details-level": "full"
+      }),
+    });
+    const rulebase = await showAccessRulebaseResponse.json();
+
+    const { objectsByUid, objectsByTypeAndName } = processLoadedRulebase(rulebase);
+    return { rulebase, objectsByUid, objectsByTypeAndName };
+    // console.log(accessRulebase);
+  } else {
+    console.error('Failed to login to S1C', cpserver);
+  }
+
+  return null;
+}
+
+function processLoadedRulebase(rulebase) {
+  const rawObjects = rulebase["objects-dictionary"];
+
+  // organize objects by uid for easier access
+  const objectsByUid = rawObjects.reduce(
+    (objectDict: { [uid: string]: any }, obj: any) => {
+      objectDict[obj.uid] = obj;
+      return objectDict;
+    },
+    {},
+  );
+
+  // organize objects by type/name for easier access
+  const objectsByTypeAndName = rawObjects.reduce(
+    (objectDict: { [key: string]: any }, obj: any) => {
+      const key = `${obj.type}/${obj.name}`;
+      objectDict[key] = obj;
+      return objectDict;
+    },
+    {},
+  );
+
+  return { objectsByUid, objectsByTypeAndName };
+
+}
+
 /**
  * Loads raw rulebase from show access-rulebase API response
  * @param {string} filename
@@ -14,27 +102,7 @@ async function loadCpRulebase(filename: string) {
 
     const rulebase = JSON.parse(ruleBaseText);
 
-    const rawObjects = rulebase["objects-dictionary"];
-
-    // organize objects by uid for easier access
-    const objectsByUid = rawObjects.reduce(
-      (objectDict: { [uid: string]: any }, obj: any) => {
-        objectDict[obj.uid] = obj;
-        return objectDict;
-      },
-      {},
-    );
-
-    // organize objects by type/name for easier access
-    const objectsByTypeAndName = rawObjects.reduce(
-      (objectDict: { [key: string]: any }, obj: any) => {
-        const key = `${obj.type}/${obj.name}`;
-        objectDict[key] = obj;
-        return objectDict;
-      },
-      {},
-    );
-
+    const { objectsByUid, objectsByTypeAndName } = processLoadedRulebase(rulebase);
     return { rulebase, objectsByUid, objectsByTypeAndName };
   } catch (err) {
     console.error("Error loading/parsing rulebase:", err);
@@ -59,7 +127,7 @@ function processService(serviceUid, objectsByUid) {
 
 function processNetworkObject(networkObjectId, objectsByUid) {
   const networkObject = objectsByUid[networkObjectId];
-  
+
   // log
   // console.log('object:', networkObject.name, networkObject.type);
   // if (networkObject.type === "group") {
@@ -219,10 +287,8 @@ function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
 function printRules(rules) {
   for (const rule of rules) {
     console.log(
-      `${rule.nsg_RuleNo} ${rule.nsg_Direction}: ${
-        JSON.stringify(rule.nsg_SourceAddresses)
-      } -> ${JSON.stringify(rule.nsg_DestinationAddresses)} ${
-        JSON.stringify(rule.nsg_Services)
+      `${rule.nsg_RuleNo} ${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_SourceAddresses)
+      } -> ${JSON.stringify(rule.nsg_DestinationAddresses)} ${JSON.stringify(rule.nsg_Services)
       } ${rule.nsg_Action} // ${rule.nsg_Description}`,
     );
   }
@@ -231,7 +297,13 @@ function printRules(rules) {
 async function main() {
   console.log("# cp2nsg\n");
 
-  const rulebaseData = await loadCpRulebase(DEMO_FILE);
+  let rulebaseData = null;
+  if (flags.s1c) {
+    rulebaseData = await loadPolicyFromS1C("NSG");
+  } else {
+    rulebaseData = await loadCpRulebase(DEMO_FILE);
+  }
+
   if (!rulebaseData) {
     console.error("Failed to load rulebase data");
     return;
@@ -281,23 +353,21 @@ function generateTerraformNSGRules(rules, rgByNsg) {
       let ports = ["*"];
       let proto = "Any";
 
-      if ( portsByProto.proto !== "undefined") {
+      if (portsByProto.proto !== "undefined") {
         ports = portsByProto.ports;
         proto = portsByProto.proto;
       }
       // console.log('service ports', ports, proto, servicesByProto);
 
-      let destination = `destination_address_prefixes= ${
-        JSON.stringify(rule.nsg_DestinationAddresses)
-      }
+      let destination = `destination_address_prefixes= ${JSON.stringify(rule.nsg_DestinationAddresses)
+        }
       `;
       if (rule.nsg_DestinationAddresses.length === 1) {
         destination = `destination_address_prefix= "${rule.nsg_DestinationAddresses[0]}" `;
       }
 
-      let source = `source_address_prefixes     = ${
-        JSON.stringify(rule.nsg_SourceAddresses)
-      }
+      let source = `source_address_prefixes     = ${JSON.stringify(rule.nsg_SourceAddresses)
+        }
       `;
       if (rule.nsg_SourceAddresses.length === 1) {
         source = `source_address_prefix= "${rule.nsg_SourceAddresses[0]}" `;
@@ -307,7 +377,7 @@ function generateTerraformNSGRules(rules, rgByNsg) {
       if (ports.length === 1) {
         portSpec = `destination_port_range      = ${JSON.stringify(ports[0])}`;
       }
-        
+
       const rgForNsg = rgByNsg[rule.nsg_NsgName] ? `"${rgByNsg[rule.nsg_NsgName]}\"` : 'azurerm_resource_group.example.name';
       console.log(`// RG for NSG ${rule.nsg_NsgName} is ${rgForNsg}`);
       // name                        = "${rule.nsg_Description}"
