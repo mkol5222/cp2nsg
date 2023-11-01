@@ -1,0 +1,34 @@
+#@subscriptionId=a9d30699-30c1-4c30-8abf-a5e45a91f3e5
+@subscriptionId={{$dotenv subscription_id}}
+GET https://management.azure.com/subscriptions/{{subscriptionId}}/providers/Microsoft.Network/networkSecurityGroups?api-version=2023-05-01
+Authorization: {{$aadToken}}
+
+###
+
+# @name login
+
+@clientId={{$dotenv client_id}}
+@clientSecret={{$dotenv client_secret}}
+@tenant={{$dotenv tenant_id}}
+
+POST https://login.microsoftonline.com/{{tenant}}/oauth2/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{clientId}}&client_secret={{clientSecret}}&resource=https://management.azure.com/&grant_type=client_credentials
+
+###
+
+# URL="https://login.microsoftonline.com/${TENANT}/oauth2/token"
+# RESP=$(curl -s -X POST "$URL" -H 'Content-Type: application/x-www-form-urlencoded' \
+#    --data-urlencode "grant_type=client_credentials" \
+#    --data-urlencode "client_id=${CLIENTID}" \
+#    --data-urlencode "client_secret=${CLIENTSECRET}" \
+#    --data-urlencode "resource=https://management.azure.com/" )
+
+###
+
+
+@token={{login.response.body.access_token}}
+
+GET https://management.azure.com/subscriptions/{{subscriptionId}}/providers/Microsoft.Network/networkSecurityGroups?api-version=2023-05-01
+Authorization: Bearer {{token}}
