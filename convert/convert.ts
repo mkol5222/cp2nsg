@@ -348,11 +348,13 @@ function generateTerraform(rules) {
     console.log("");
     console.log(`# ${nsgIndex}. ${nsgData.nsgName}`);
 
+    const rgForNsg = rgByNsg[nsgData.nsgName] ? `"${rgByNsg[nsgData.nsgName]}\"` : 'azurerm_resource_group.example.name';
+
     console.log(` 
       resource "azurerm_network_security_group" "${nsgData.nsgName}" {
         name                = "${nsgData.nsgName}"
         location            = azurerm_resource_group.example.location
-        resource_group_name = azurerm_resource_group.example.name
+        resource_group_name = ${rgForNsg}
       }
         `);
 
