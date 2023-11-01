@@ -261,10 +261,12 @@ function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
     // console.log("processing NSG rulebase", nsgName);
 
     const nsgOutgoingRules = rules
+      .filter((rule => rule.enabled))
       .filter((rule) => uidsIncludeNSG(rule.source, nsgName, objectsByUid)) // nsgName in source
       .map((rule) => processRule(rule, "Outbound", nsgName, objectsByUid));
 
     const nsgIncomingRules = rules
+      .filter((rule => rule.enabled))
       .filter((rule) => uidsIncludeNSG(rule.destination, nsgName, objectsByUid)) // nsgName in dst
       .map((rule) => processRule(rule, "Inbound", nsgName, objectsByUid));
 

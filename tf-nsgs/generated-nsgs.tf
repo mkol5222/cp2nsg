@@ -41,24 +41,6 @@
             name = "Default_101_Inbound_Tcp"
             priority                    = 101
             direction                   = "Inbound"
-            access                      = "Allow"
-            protocol                    = "Tcp"
-            source_port_range           = "*"
-            destination_port_ranges      = [80,443]
-            source_address_prefix= "*" 
-            destination_address_prefix= "*" 
-            resource_group_name         = "rg-nsg-default"
-            network_security_group_name = azurerm_network_security_group.Default.name
-
-        }
-        
-// RG for NSG Default is "rg-nsg-default"
-
-        resource "azurerm_network_security_rule" "Default_102_Inbound_Tcp" {
-
-            name = "Default_102_Inbound_Tcp"
-            priority                    = 102
-            direction                   = "Inbound"
             access                      = "Deny"
             protocol                    = "Tcp"
             source_port_range           = "*"
@@ -72,10 +54,10 @@
         
 // RG for NSG Default is "rg-nsg-default"
 
-        resource "azurerm_network_security_rule" "Default_103_Inbound_Any" {
+        resource "azurerm_network_security_rule" "Default_102_Inbound_Any" {
 
-            name = "Default_103_Inbound_Any"
-            priority                    = 103
+            name = "Default_102_Inbound_Any"
+            priority                    = 102
             direction                   = "Inbound"
             access                      = "Deny"
             protocol                    = "*"
