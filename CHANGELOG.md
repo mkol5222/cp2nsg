@@ -1,5 +1,9 @@
 ### CHANGELOG
 
+### 2023-10-30
+
+* initial release
+
 #### 2023-11-01
 
 * ability to specify NSG Azure Resource Group in tag e.g. RG:rg-nsg1 on NSG_name object
