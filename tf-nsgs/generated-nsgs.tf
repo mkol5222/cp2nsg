@@ -85,10 +85,44 @@
         }
         
 
-        resource "azurerm_network_security_rule" "Default_100_Outbound_Any" {
+        resource "azurerm_network_security_rule" "Default_100_Outbound_Tcp" {
 
-            name = "Default_100_Outbound_Any"
+            name = "Default_100_Outbound_Tcp"
             priority                    = 100
+            direction                   = "Outbound"
+            access                      = "Allow"
+            protocol                    = "Tcp"
+            source_port_range           = "*"
+            destination_port_ranges      = [389,636,80,443]
+            source_address_prefix= "*" 
+            destination_address_prefix= "AzureActiveDirectory" 
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.Default.name
+
+        }
+        
+
+        resource "azurerm_network_security_rule" "Default_101_Outbound_Udp" {
+
+            name = "Default_101_Outbound_Udp"
+            priority                    = 101
+            direction                   = "Outbound"
+            access                      = "Allow"
+            protocol                    = "Udp"
+            source_port_range           = "*"
+            destination_port_range      = 389
+            source_address_prefix= "*" 
+            destination_address_prefix= "AzureActiveDirectory" 
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.Default.name
+
+        }
+        
+
+        resource "azurerm_network_security_rule" "Default_102_Outbound_Any" {
+
+            name = "Default_102_Outbound_Any"
+            priority                    = 102
             direction                   = "Outbound"
             access                      = "Allow"
             protocol                    = "*"
@@ -145,34 +179,35 @@
         }
         
 
-        resource "azurerm_network_security_rule" "WebDemo_100_Outbound_Udp" {
+        resource "azurerm_network_security_rule" "WebDemo_100_Outbound_Tcp" {
 
-            name = "WebDemo_100_Outbound_Udp"
+            name = "WebDemo_100_Outbound_Tcp"
             priority                    = 100
             direction                   = "Outbound"
             access                      = "Allow"
-            protocol                    = "Udp"
+            protocol                    = "Tcp"
             source_port_range           = "*"
-            destination_port_range      = 123
+            destination_port_range      = 22
             source_address_prefix= "*" 
-            destination_address_prefix= "195.113.144.201/32" 
+            destination_address_prefix= "VirtualNetwork" 
             resource_group_name         = azurerm_resource_group.example.name
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }
         
 
-        resource "azurerm_network_security_rule" "WebDemo_101_Outbound_Tcp" {
+        resource "azurerm_network_security_rule" "WebDemo_101_Outbound_Udp" {
 
-            name = "WebDemo_101_Outbound_Tcp"
+            name = "WebDemo_101_Outbound_Udp"
             priority                    = 101
             direction                   = "Outbound"
             access                      = "Allow"
-            protocol                    = "Tcp"
+            protocol                    = "Udp"
             source_port_range           = "*"
             destination_port_range      = 123
             source_address_prefix= "*" 
-            destination_address_prefix= "195.113.144.201/32" 
+            destination_address_prefixes= ["195.113.144.201/32","195.113.144.23/32"]
+      
             resource_group_name         = azurerm_resource_group.example.name
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
@@ -183,6 +218,24 @@
 
             name = "WebDemo_102_Outbound_Tcp"
             priority                    = 102
+            direction                   = "Outbound"
+            access                      = "Allow"
+            protocol                    = "Tcp"
+            source_port_range           = "*"
+            destination_port_range      = 123
+            source_address_prefix= "*" 
+            destination_address_prefixes= ["195.113.144.201/32","195.113.144.23/32"]
+      
+            resource_group_name         = azurerm_resource_group.example.name
+            network_security_group_name = azurerm_network_security_group.WebDemo.name
+
+        }
+        
+
+        resource "azurerm_network_security_rule" "WebDemo_103_Outbound_Tcp" {
+
+            name = "WebDemo_103_Outbound_Tcp"
+            priority                    = 103
             direction                   = "Outbound"
             access                      = "Allow"
             protocol                    = "Tcp"

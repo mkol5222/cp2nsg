@@ -1,5 +1,8 @@
-const DEMO_FILE = "./data/2nsgs-access-rulebase.json";
+// const DEMO_FILE = "./data/2nsgs-access-rulebase.json";
+const DEMO_FILE = "./data/servicetags-rulebase.json";
 
+const SERVICETAG_PREFIX = "ServiceTag_";
+const NSG_PREFIX = "NSG_";
 /**
  * Loads raw rulebase from show access-rulebase API response
  * @param {string} filename
@@ -46,6 +49,20 @@ function processService(serviceUid, objectsByUid) {
 
 function processNetworkObject(networkObjectId, objectsByUid) {
   const networkObject = objectsByUid[networkObjectId];
+  
+  // log
+  // console.log('object:', networkObject.name, networkObject.type);
+  // if (networkObject.type === "group") {
+  //   console.log('group:', networkObject.name);
+  // }
+  // if (networkObject.name.startsWith(SERVICETAG_PREFIX)) {
+  //   console.log('SERVICETAG_PREFIX:', networkObject.name);
+  // }
+
+  if (networkObject.type === "group" && networkObject.name.startsWith(SERVICETAG_PREFIX)) {
+    // console.log('service tag', networkObject.name.slice(SERVICETAG_PREFIX.length))
+    return networkObject.name.slice(SERVICETAG_PREFIX.length);
+  }
 
   if (networkObject.type === "CpmiAnyObject" && networkObject.name === "Any") {
     return "*";
@@ -56,9 +73,11 @@ function processNetworkObject(networkObjectId, objectsByUid) {
   if (networkObject.type === "network") {
     return `${networkObject["subnet4"]}/${networkObject["mask-length4"]}`;
   }
-  if (networkObject.type === "group" && networkObject.name.startsWith("NSG_")) {
+  if (networkObject.type === "group" && networkObject.name.startsWith(NSG_PREFIX)) {
     return "*";
   }
+
+
 
   return networkObject;
 }
@@ -91,7 +110,7 @@ function nsgsFromObjectUids(objectUids, objectsByUid) {
   return unique(
     objectUids
       .map((uid) => objectsByUid[uid]) // get objects by uid
-      .filter((o) => o.type === "group" && o.name.startsWith("NSG_")) // network group name starts with NSG_
+      .filter((o) => o.type === "group" && o.name.startsWith(NSG_PREFIX)) // network group name starts with NSG_
       .map((o) => o.name.slice(4)), // remove NSG_ prefix
   );
 }
