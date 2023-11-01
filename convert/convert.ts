@@ -25,7 +25,17 @@ async function loadCpRulebase(filename: string) {
       {},
     );
 
-    return { rulebase, objectsByUid };
+    // organize objects by type/name for easier access
+    const objectsByTypeAndName = rawObjects.reduce(
+      (objectDict: { [key: string]: any }, obj: any) => {
+        const key = `${obj.type}/${obj.name}`;
+        objectDict[key] = obj;
+        return objectDict;
+      },
+      {},
+    );
+
+    return { rulebase, objectsByUid, objectsByTypeAndName };
   } catch (err) {
     console.error("Error loading/parsing rulebase:", err);
   }
@@ -152,7 +162,7 @@ function uidsIncludeNSG(uids, nsgName, objectsByUid) {
   return uids.map((uid) => objectsByUid[uid].name).includes(`NSG_${nsgName}`);
 }
 
-function processRules(rulebase, objectsByUid) {
+function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
   const rules = flatRules(rulebase);
 
   // need all sources and all destination UIDs to find NSG names
@@ -163,6 +173,20 @@ function processRules(rulebase, objectsByUid) {
   const allSorceNsgs = nsgsFromObjectUids(allSources, objectsByUid);
   const allDestinationNsgs = nsgsFromObjectUids(allDestinations, objectsByUid);
   const allNsgs = unique([...allSorceNsgs, ...allDestinationNsgs]);
+
+  // RGs for NSGs:
+  const rgByNsg = {};
+  for (const nsg of allNsgs) {
+    const nsgObj = objectsByTypeAndName[`group/NSG_${nsg}`];
+    // console.log('nsgObj tags', nsgObj.tags);
+    for (const tag of nsgObj.tags) {
+      // console.log('nsgObj tags', tag.name);
+      if (tag.name.startsWith('RG:')) {
+        rgByNsg[nsg] = tag.name.slice(3);
+      }
+    }
+  }
+  // console.log('nsgObj tags', rgByNsg);
 
   // process all NGSs into rulebases
   const nsgRulebases = allNsgs.map((nsgName) => {
@@ -188,6 +212,7 @@ function processRules(rulebase, objectsByUid) {
   return {
     allNsgs,
     nsgRulebases,
+    rgByNsg
   };
 }
 
@@ -212,9 +237,9 @@ async function main() {
     return;
   }
 
-  const { rulebase, objectsByUid } = rulebaseData!;
+  const { rulebase, objectsByUid, objectsByTypeAndName } = rulebaseData!;
 
-  const rules = processRules(rulebase, objectsByUid);
+  const rules = processRules(rulebase, objectsByUid, objectsByTypeAndName);
 
   //   for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
   //     console.log("");
@@ -240,7 +265,7 @@ function servicesByProtocol(services) {
     }));
 }
 
-function generateTerraformNSGRules(rules) {
+function generateTerraformNSGRules(rules, rgByNsg) {
   let priority = 100;
   for (const rule of rules) {
     //console.log(rule);
@@ -283,6 +308,8 @@ function generateTerraformNSGRules(rules) {
         portSpec = `destination_port_range      = ${JSON.stringify(ports[0])}`;
       }
         
+      const rgForNsg = rgByNsg[rule.nsg_NsgName] ? `"${rgByNsg[rule.nsg_NsgName]}\"` : 'azurerm_resource_group.example.name';
+      console.log(`// RG for NSG ${rule.nsg_NsgName} is ${rgForNsg}`);
       // name                        = "${rule.nsg_Description}"
       console.log(`
         resource "azurerm_network_security_rule" "${rule.nsg_NsgName}_${ruleNo}_${rule.nsg_Direction}_${proto}" {
@@ -296,7 +323,7 @@ function generateTerraformNSGRules(rules) {
             ${portSpec}
             ${source}
             ${destination}
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = ${rgForNsg}
             network_security_group_name = azurerm_network_security_group.${rule.nsg_NsgName}.name
 
         }
@@ -306,6 +333,10 @@ function generateTerraformNSGRules(rules) {
 }
 
 function generateTerraform(rules) {
+
+  const { rgByNsg } = rules;
+
+  // console.log('generateTerraform rgByNsg', rgByNsg);
   console.log(`
     resource "azurerm_resource_group" "example" {
         name     = "nsg-example-resources"
@@ -325,8 +356,8 @@ function generateTerraform(rules) {
       }
         `);
 
-    generateTerraformNSGRules(nsgData.nsgIncomingRules);
-    generateTerraformNSGRules(nsgData.nsgOutgoingRules);
+    generateTerraformNSGRules(nsgData.nsgIncomingRules, rgByNsg);
+    generateTerraformNSGRules(nsgData.nsgOutgoingRules, rgByNsg);
   }
 }
 

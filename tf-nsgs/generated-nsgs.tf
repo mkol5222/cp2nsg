@@ -15,6 +15,7 @@
         resource_group_name = azurerm_resource_group.example.name
       }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_100_Inbound_Tcp" {
 
@@ -33,6 +34,7 @@
 
         }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_101_Inbound_Tcp" {
 
@@ -50,6 +52,7 @@
 
         }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_102_Inbound_Tcp" {
 
@@ -67,6 +70,7 @@
 
         }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_103_Inbound_Any" {
 
@@ -84,6 +88,7 @@
 
         }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_100_Outbound_Tcp" {
 
@@ -101,6 +106,7 @@
 
         }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_101_Outbound_Udp" {
 
@@ -118,6 +124,7 @@
 
         }
         
+// RG for NSG Default is azurerm_resource_group.example.name
 
         resource "azurerm_network_security_rule" "Default_102_Outbound_Any" {
 
@@ -144,6 +151,7 @@
         resource_group_name = azurerm_resource_group.example.name
       }
         
+// RG for NSG WebDemo is "rg-nsg1"
 
         resource "azurerm_network_security_rule" "WebDemo_100_Inbound_Tcp" {
 
@@ -156,11 +164,12 @@
             destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg1"
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }
         
+// RG for NSG WebDemo is "rg-nsg1"
 
         resource "azurerm_network_security_rule" "WebDemo_101_Inbound_Any" {
 
@@ -173,11 +182,12 @@
             destination_port_range      = "*"
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg1"
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }
         
+// RG for NSG WebDemo is "rg-nsg1"
 
         resource "azurerm_network_security_rule" "WebDemo_100_Outbound_Tcp" {
 
@@ -190,11 +200,12 @@
             destination_port_range      = 22
             source_address_prefix= "*" 
             destination_address_prefix= "VirtualNetwork" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg1"
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }
         
+// RG for NSG WebDemo is "rg-nsg1"
 
         resource "azurerm_network_security_rule" "WebDemo_101_Outbound_Udp" {
 
@@ -208,11 +219,12 @@
             source_address_prefix= "*" 
             destination_address_prefixes= ["195.113.144.201/32","195.113.144.23/32"]
       
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg1"
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }
         
+// RG for NSG WebDemo is "rg-nsg1"
 
         resource "azurerm_network_security_rule" "WebDemo_102_Outbound_Tcp" {
 
@@ -226,11 +238,12 @@
             source_address_prefix= "*" 
             destination_address_prefixes= ["195.113.144.201/32","195.113.144.23/32"]
       
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg1"
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }
         
+// RG for NSG WebDemo is "rg-nsg1"
 
         resource "azurerm_network_security_rule" "WebDemo_103_Outbound_Tcp" {
 
@@ -243,7 +256,7 @@
             destination_port_ranges      = [80,443]
             source_address_prefix= "*" 
             destination_address_prefix= "*" 
-            resource_group_name         = azurerm_resource_group.example.name
+            resource_group_name         = "rg-nsg1"
             network_security_group_name = azurerm_network_security_group.WebDemo.name
 
         }

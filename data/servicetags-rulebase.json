@@ -1,1023 +1,1685 @@
 {
-    "uid" : "aefb4e0f-801d-48a5-9fe2-18f9ed90031f",
-    "name" : "NSG Network",
-    "rulebase" : [ {
-      "uid" : "f35c085f-a4dd-4e1e-b3ec-d19b3e713903",
-      "name" : "NSG_Default",
-      "type" : "access-section",
-      "from" : 1,
-      "to" : 6,
-      "rulebase" : [ {
-        "uid" : "90e0a6ac-5dcc-4570-8be6-68d9ef32346a",
-        "name" : "AzureAD access with Service Tags",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 1,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
-        "source-negate" : false,
-        "destination" : [ "3cca9b3c-2ba3-4acb-9abd-5d75c3c43175" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb433-9aea-11d5-bd16-0090272ccb30", "97aeb434-9aea-11d5-bd16-0090272ccb30", "ced7ba46-1e36-48ad-b527-521a63e8cb05", "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698822048871,
-            "iso-8601" : "2023-11-01T07:00+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698821131145,
-            "iso-8601" : "2023-11-01T06:45+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "eff6087b-e36c-46f4-beb7-c80430538757",
-        "name" : "Allow all egress from NSG Default",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 2,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
-        "source-negate" : false,
-        "destination" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698733854467,
-            "iso-8601" : "2023-10-31T06:30+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698733771375,
-            "iso-8601" : "2023-10-31T06:29+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "eb3cc2d8-9f02-4449-b839-0d35407e96c2",
-        "name" : "NSG Default Ingress admin",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 3,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "5a8d1edc-a1f8-4557-bb2c-8ec083a0a362", "47e93f5a-2f5e-49c9-b777-06f887417270" ],
-        "source-negate" : false,
-        "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
-        "destination-negate" : false,
-        "service" : [ "18ec9eaa-1657-4240-ab97-5f234623336b", "e5d744ad-e952-4999-a3b9-3d3130c70479" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698734202409,
-            "iso-8601" : "2023-10-31T06:36+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698734076553,
-            "iso-8601" : "2023-10-31T06:34+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "9f1efbed-392c-4f7e-a591-bc2f52d95924",
-        "name" : "NSG Default Ingress web",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 4,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "source-negate" : false,
-        "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698734065441,
-            "iso-8601" : "2023-10-31T06:34+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698733870074,
-            "iso-8601" : "2023-10-31T06:31+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "a8cb368c-0ee0-4785-bc19-ddcc4d6900a9",
-        "name" : "NSG Default Ingress block admin proto",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 5,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "source-negate" : false,
-        "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
-        "destination-negate" : false,
-        "service" : [ "18ec9eaa-1657-4240-ab97-5f234623336b", "e5d744ad-e952-4999-a3b9-3d3130c70479" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
-        "action-settings" : { },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698734050479,
-            "iso-8601" : "2023-10-31T06:34+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698733879311,
-            "iso-8601" : "2023-10-31T06:31+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "2e5a010e-23f0-48b6-a2e3-a64b0d38a509",
-        "name" : "NSG Default Ingress cleanup rule",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 6,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "source-negate" : false,
-        "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
-        "action-settings" : { },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698734034875,
-            "iso-8601" : "2023-10-31T06:33+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698733877037,
-            "iso-8601" : "2023-10-31T06:31+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      } ]
-    }, {
-      "uid" : "95dccff2-4a57-46f9-8aa1-d178880b13e4",
-      "name" : "NSG_WebDemo",
-      "type" : "access-section",
-      "from" : 7,
-      "to" : 11,
-      "rulebase" : [ {
-        "uid" : "b276ecac-dd27-4e11-9c89-3c5fcd4e680c",
-        "name" : "SSH Egress to VNET",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 7,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
-        "source-negate" : false,
-        "destination" : [ "d47e2609-d0ce-4c83-abb8-295abe6c81f5" ],
-        "destination-negate" : false,
-        "service" : [ "18ec9eaa-1657-4240-ab97-5f234623336b" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698822145560,
-            "iso-8601" : "2023-11-01T07:02+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698822081479,
-            "iso-8601" : "2023-11-01T07:01+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "f85c6d3a-eb1c-4ca5-b7d6-0741df7be819",
-        "name" : "HTTP ingress",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 8,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "source-negate" : false,
-        "destination" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698754517836,
-            "iso-8601" : "2023-10-31T12:15+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698754488238,
-            "iso-8601" : "2023-10-31T12:14+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "ffd82a91-e13a-45ab-ba3b-d5e7100726e3",
-        "name" : "Ingress cleanup",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 9,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "source-negate" : false,
-        "destination" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
-        "action-settings" : { },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698754483421,
-            "iso-8601" : "2023-10-31T12:14+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698754451525,
-            "iso-8601" : "2023-10-31T12:14+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "c9b66402-9af7-4e81-9ddd-1524cd72169a",
-        "name" : "NTP Egress",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 10,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
-        "source-negate" : false,
-        "destination" : [ "11284d74-580a-495f-8419-325103050837", "cbfe9a6a-9900-466f-9f2b-a5f13346acad" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb404-9aea-11d5-bd16-0090272ccb30", "97aeb403-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698755998312,
-            "iso-8601" : "2023-10-31T12:39+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698754571932,
-            "iso-8601" : "2023-10-31T12:16+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      }, {
-        "uid" : "96c6d43b-1db4-4321-82e3-90a2cb0b779d",
-        "name" : "WebDemo Egress",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 11,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
-        "source-negate" : false,
-        "destination" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-        "action-settings" : {
-          "enable-identity-captive-portal" : false
-        },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698754420942,
-            "iso-8601" : "2023-10-31T12:13+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698754373828,
-            "iso-8601" : "2023-10-31T12:12+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      } ]
-    }, {
-      "uid" : "6d491e12-9cbb-4df8-acad-b42e01effda4",
-      "name" : "Cleanup",
-      "type" : "access-section",
-      "from" : 12,
-      "to" : 12,
-      "rulebase" : [ {
-        "uid" : "9f4d4953-266a-4414-b8f4-9128257c01b1",
-        "name" : "Cleanup rule",
-        "type" : "access-rule",
-        "domain" : {
-          "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-          "name" : "SMC User",
-          "domain-type" : "domain"
-        },
-        "rule-number" : 12,
-        "track" : {
-          "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-          "per-session" : false,
-          "per-connection" : false,
-          "accounting" : false,
-          "enable-firewall-session" : false,
-          "alert" : "none"
-        },
-        "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "source-negate" : false,
-        "destination" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "destination-negate" : false,
-        "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "service-negate" : false,
-        "service-resource" : "",
-        "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
-        "action-settings" : { },
-        "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "content-negate" : false,
-        "content-direction" : "any",
-        "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
-        "custom-fields" : {
-          "field-1" : "",
-          "field-2" : "",
-          "field-3" : ""
-        },
-        "meta-info" : {
-          "lock" : "unlocked",
-          "validation-state" : "ok",
-          "last-modify-time" : {
-            "posix" : 1698733746932,
-            "iso-8601" : "2023-10-31T06:29+0000"
-          },
-          "last-modifier" : "mkoldov@checkpoint.com",
-          "creation-time" : {
-            "posix" : 1698733746932,
-            "iso-8601" : "2023-10-31T06:29+0000"
-          },
-          "creator" : "mkoldov@checkpoint.com"
-        },
-        "comments" : "",
-        "enabled" : true,
-        "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
-        "available-actions" : {
-          "edit" : "true",
-          "delete" : "true",
-          "clone" : "not_supported"
-        },
-        "tags" : [ ]
-      } ]
-    } ],
-    "objects-dictionary" : [ {
-      "uid" : "6c488338-8eec-4103-ad21-cd461ac2c472",
-      "name" : "Accept",
-      "type" : "RulebaseAction",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "icon" : "Actions/actionsAccept",
-      "color" : "none"
-    }, {
-      "uid" : "97aeb369-9aea-11d5-bd16-0090272ccb30",
-      "name" : "Any",
-      "type" : "CpmiAnyObject",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "icon" : "General/globalsAny",
-      "color" : "black"
-    }, {
-      "uid" : "47e93f5a-2f5e-49c9-b777-06f887417270",
-      "name" : "devops_guru",
-      "type" : "host",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "ipv4-address" : "194.228.2.1",
-      "icon" : "Objects/host",
-      "color" : "black"
-    }, {
-      "uid" : "6c488338-8eec-4103-ad21-cd461ac2c473",
-      "name" : "Drop",
-      "type" : "RulebaseAction",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "icon" : "Actions/actionsDrop",
-      "color" : "none"
-    }, {
-      "uid" : "97aeb3d4-9aea-11d5-bd16-0090272ccb30",
-      "name" : "http",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "80",
-      "icon" : "Protocols/HTTP",
-      "color" : "forest green"
-    }, {
-      "uid" : "97aeb443-9aea-11d5-bd16-0090272ccb30",
-      "name" : "https",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "443",
-      "icon" : "Protocols/HTTP",
-      "color" : "red"
-    }, {
-      "uid" : "97aeb433-9aea-11d5-bd16-0090272ccb30",
-      "name" : "ldap",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "389",
-      "icon" : "Protocols/LDAP",
-      "color" : "black"
-    }, {
-      "uid" : "97aeb434-9aea-11d5-bd16-0090272ccb30",
-      "name" : "ldap-ssl",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "636",
-      "icon" : "Services/TCPService",
-      "color" : "black"
-    }, {
-      "uid" : "ced7ba46-1e36-48ad-b527-521a63e8cb05",
-      "name" : "ldap_udp",
-      "type" : "service-udp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "389",
-      "icon" : "Protocols/LDAP",
-      "color" : "black"
-    }, {
-      "uid" : "5a8d1edc-a1f8-4557-bb2c-8ec083a0a362",
-      "name" : "net_admin",
-      "type" : "network",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "subnet4" : "192.168.1.0",
-      "mask-length4" : 24,
-      "subnet-mask" : "255.255.255.0",
-      "icon" : "NetworkObjects/network",
-      "color" : "black"
-    }, {
-      "uid" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
-      "name" : "None",
-      "type" : "Track",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "icon" : "General/globalsNone",
-      "color" : "none"
-    }, {
-      "uid" : "046845ed-25bd-4f72-9220-63ade5c37cc9",
-      "name" : "NSG_Default",
-      "type" : "group",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "icon" : "General/group",
-      "color" : "black"
-    }, {
-      "uid" : "2e653aac-3810-4e14-abc1-c4aa89762bec",
-      "name" : "NSG_WebDemo",
-      "type" : "group",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "icon" : "General/group",
-      "color" : "black"
-    }, {
-      "uid" : "97aeb403-9aea-11d5-bd16-0090272ccb30",
-      "name" : "ntp-tcp",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "123",
-      "icon" : "Services/TCPService",
-      "color" : "black"
-    }, {
-      "uid" : "97aeb404-9aea-11d5-bd16-0090272ccb30",
-      "name" : "ntp-udp",
-      "type" : "service-udp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "123",
-      "icon" : "Services/UDPService",
-      "color" : "black"
-    }, {
-      "uid" : "6c488338-8eec-4103-ad21-cd461ac2c476",
-      "name" : "Policy Targets",
-      "type" : "Global",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "icon" : "General/globalsAny",
-      "color" : "none"
-    }, {
-      "uid" : "e5d744ad-e952-4999-a3b9-3d3130c70479",
-      "name" : "Remote_Desktop_Protocol",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "3389",
-      "icon" : "Protocols/RDP",
-      "color" : "black"
-    }, {
-      "uid" : "3cca9b3c-2ba3-4acb-9abd-5d75c3c43175",
-      "name" : "ServiceTag_AzureActiveDirectory",
-      "type" : "group",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "icon" : "General/group",
-      "color" : "black"
-    }, {
-      "uid" : "d47e2609-d0ce-4c83-abb8-295abe6c81f5",
-      "name" : "ServiceTag_VirtualNetwork",
-      "type" : "group",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "icon" : "General/group",
-      "color" : "black"
-    }, {
-      "uid" : "18ec9eaa-1657-4240-ab97-5f234623336b",
-      "name" : "ssh",
-      "type" : "service-tcp",
-      "domain" : {
-        "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
-        "name" : "Check Point Data",
-        "domain-type" : "data domain"
-      },
-      "port" : "22",
-      "icon" : "Services/TCPService",
-      "color" : "red"
-    }, {
-      "uid" : "cbfe9a6a-9900-466f-9f2b-a5f13346acad",
-      "name" : "tak.cesnet.cz",
-      "type" : "host",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "ipv4-address" : "195.113.144.23",
-      "icon" : "Objects/host",
-      "color" : "black"
-    }, {
-      "uid" : "11284d74-580a-495f-8419-325103050837",
-      "name" : "tik.cesnet.cz",
-      "type" : "host",
-      "domain" : {
-        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
-        "name" : "SMC User",
-        "domain-type" : "domain"
-      },
-      "ipv4-address" : "195.113.144.201",
-      "icon" : "Objects/host",
-      "color" : "black"
-    } ],
+  "uid" : "aefb4e0f-801d-48a5-9fe2-18f9ed90031f",
+  "name" : "NSG Network",
+  "rulebase" : [ {
+    "uid" : "f35c085f-a4dd-4e1e-b3ec-d19b3e713903",
+    "name" : "NSG_Default",
+    "type" : "access-section",
     "from" : 1,
+    "to" : 6,
+    "rulebase" : [ {
+      "uid" : "90e0a6ac-5dcc-4570-8be6-68d9ef32346a",
+      "name" : "AzureAD access with Service Tags",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 1,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
+      "source-negate" : false,
+      "destination" : [ "3cca9b3c-2ba3-4acb-9abd-5d75c3c43175" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb433-9aea-11d5-bd16-0090272ccb30", "97aeb434-9aea-11d5-bd16-0090272ccb30", "ced7ba46-1e36-48ad-b527-521a63e8cb05", "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698822048871,
+          "iso-8601" : "2023-11-01T07:00+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698821131145,
+          "iso-8601" : "2023-11-01T06:45+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "eff6087b-e36c-46f4-beb7-c80430538757",
+      "name" : "Allow all egress from NSG Default",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 2,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
+      "source-negate" : false,
+      "destination" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698733854467,
+          "iso-8601" : "2023-10-31T06:30+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698733771375,
+          "iso-8601" : "2023-10-31T06:29+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "eb3cc2d8-9f02-4449-b839-0d35407e96c2",
+      "name" : "NSG Default Ingress admin",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 3,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "5a8d1edc-a1f8-4557-bb2c-8ec083a0a362", "47e93f5a-2f5e-49c9-b777-06f887417270" ],
+      "source-negate" : false,
+      "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
+      "destination-negate" : false,
+      "service" : [ "18ec9eaa-1657-4240-ab97-5f234623336b", "e5d744ad-e952-4999-a3b9-3d3130c70479" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698734202409,
+          "iso-8601" : "2023-10-31T06:36+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698734076553,
+          "iso-8601" : "2023-10-31T06:34+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "9f1efbed-392c-4f7e-a591-bc2f52d95924",
+      "name" : "NSG Default Ingress web",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 4,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "source-negate" : false,
+      "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698734065441,
+          "iso-8601" : "2023-10-31T06:34+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698733870074,
+          "iso-8601" : "2023-10-31T06:31+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "a8cb368c-0ee0-4785-bc19-ddcc4d6900a9",
+      "name" : "NSG Default Ingress block admin proto",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 5,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "source-negate" : false,
+      "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
+      "destination-negate" : false,
+      "service" : [ "18ec9eaa-1657-4240-ab97-5f234623336b", "e5d744ad-e952-4999-a3b9-3d3130c70479" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
+      "action-settings" : { },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698734050479,
+          "iso-8601" : "2023-10-31T06:34+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698733879311,
+          "iso-8601" : "2023-10-31T06:31+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "2e5a010e-23f0-48b6-a2e3-a64b0d38a509",
+      "name" : "NSG Default Ingress cleanup rule",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 6,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "source-negate" : false,
+      "destination" : [ "046845ed-25bd-4f72-9220-63ade5c37cc9" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
+      "action-settings" : { },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698734034875,
+          "iso-8601" : "2023-10-31T06:33+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698733877037,
+          "iso-8601" : "2023-10-31T06:31+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    } ]
+  }, {
+    "uid" : "95dccff2-4a57-46f9-8aa1-d178880b13e4",
+    "name" : "NSG_WebDemo",
+    "type" : "access-section",
+    "from" : 7,
+    "to" : 11,
+    "rulebase" : [ {
+      "uid" : "b276ecac-dd27-4e11-9c89-3c5fcd4e680c",
+      "name" : "SSH Egress to VNET",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 7,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
+      "source-negate" : false,
+      "destination" : [ "d47e2609-d0ce-4c83-abb8-295abe6c81f5" ],
+      "destination-negate" : false,
+      "service" : [ "18ec9eaa-1657-4240-ab97-5f234623336b" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698822145560,
+          "iso-8601" : "2023-11-01T07:02+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698822081479,
+          "iso-8601" : "2023-11-01T07:01+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "f85c6d3a-eb1c-4ca5-b7d6-0741df7be819",
+      "name" : "HTTP ingress",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 8,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "source-negate" : false,
+      "destination" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698754517836,
+          "iso-8601" : "2023-10-31T12:15+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698754488238,
+          "iso-8601" : "2023-10-31T12:14+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "ffd82a91-e13a-45ab-ba3b-d5e7100726e3",
+      "name" : "Ingress cleanup",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 9,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "source-negate" : false,
+      "destination" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
+      "action-settings" : { },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698754483421,
+          "iso-8601" : "2023-10-31T12:14+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698754451525,
+          "iso-8601" : "2023-10-31T12:14+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "c9b66402-9af7-4e81-9ddd-1524cd72169a",
+      "name" : "NTP Egress",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 10,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
+      "source-negate" : false,
+      "destination" : [ "11284d74-580a-495f-8419-325103050837", "cbfe9a6a-9900-466f-9f2b-a5f13346acad" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb404-9aea-11d5-bd16-0090272ccb30", "97aeb403-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698755998312,
+          "iso-8601" : "2023-10-31T12:39+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698754571932,
+          "iso-8601" : "2023-10-31T12:16+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    }, {
+      "uid" : "96c6d43b-1db4-4321-82e3-90a2cb0b779d",
+      "name" : "WebDemo Egress",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 11,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "2e653aac-3810-4e14-abc1-c4aa89762bec" ],
+      "source-negate" : false,
+      "destination" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb3d4-9aea-11d5-bd16-0090272ccb30", "97aeb443-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+      "action-settings" : {
+        "enable-identity-captive-portal" : false
+      },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698754420942,
+          "iso-8601" : "2023-10-31T12:13+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698754373828,
+          "iso-8601" : "2023-10-31T12:12+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    } ]
+  }, {
+    "uid" : "6d491e12-9cbb-4df8-acad-b42e01effda4",
+    "name" : "Cleanup",
+    "type" : "access-section",
+    "from" : 12,
     "to" : 12,
-    "total" : 12
-  }
+    "rulebase" : [ {
+      "uid" : "9f4d4953-266a-4414-b8f4-9128257c01b1",
+      "name" : "Cleanup rule",
+      "type" : "access-rule",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "rule-number" : 12,
+      "track" : {
+        "type" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+        "per-session" : false,
+        "per-connection" : false,
+        "accounting" : false,
+        "enable-firewall-session" : false,
+        "alert" : "none"
+      },
+      "source" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "source-negate" : false,
+      "destination" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "destination-negate" : false,
+      "service" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "service-negate" : false,
+      "service-resource" : "",
+      "vpn" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "action" : "6c488338-8eec-4103-ad21-cd461ac2c473",
+      "action-settings" : { },
+      "content" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "content-negate" : false,
+      "content-direction" : "any",
+      "time" : [ "97aeb369-9aea-11d5-bd16-0090272ccb30" ],
+      "custom-fields" : {
+        "field-1" : "",
+        "field-2" : "",
+        "field-3" : ""
+      },
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698733746932,
+          "iso-8601" : "2023-10-31T06:29+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698733746932,
+          "iso-8601" : "2023-10-31T06:29+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "comments" : "",
+      "enabled" : true,
+      "install-on" : [ "6c488338-8eec-4103-ad21-cd461ac2c476" ],
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "not_supported"
+      },
+      "tags" : [ ]
+    } ]
+  } ],
+  "objects-dictionary" : [ {
+    "uid" : "6c488338-8eec-4103-ad21-cd461ac2c472",
+    "name" : "Accept",
+    "type" : "RulebaseAction",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "color" : "none",
+    "meta-info" : {
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642046030,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642046030,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "tags" : [ ],
+    "icon" : "Actions/actionsAccept",
+    "comments" : "Accept",
+    "display-name" : "Accept",
+    "customFields" : null
+  }, {
+    "uid" : "97aeb369-9aea-11d5-bd16-0090272ccb30",
+    "name" : "Any",
+    "type" : "CpmiAnyObject",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "comments" : "",
+    "color" : "black",
+    "icon" : "General/globalsAny",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642023237,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642023237,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "47e93f5a-2f5e-49c9-b777-06f887417270",
+    "name" : "devops_guru",
+    "type" : "host",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "ipv4-address" : "194.228.2.1",
+    "interfaces" : [ ],
+    "nat-settings" : {
+      "auto-rule" : false
+    },
+    "comments" : "",
+    "color" : "black",
+    "icon" : "Objects/host",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698734185626,
+        "iso-8601" : "2023-10-31T06:36+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698734185626,
+        "iso-8601" : "2023-10-31T06:36+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "6c488338-8eec-4103-ad21-cd461ac2c473",
+    "name" : "Drop",
+    "type" : "RulebaseAction",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "color" : "none",
+    "meta-info" : {
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642046034,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642046034,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "tags" : [ ],
+    "icon" : "Actions/actionsDrop",
+    "comments" : "Drop",
+    "display-name" : "Drop",
+    "customFields" : null
+  }, {
+    "uid" : "97aeb3d4-9aea-11d5-bd16-0090272ccb30",
+    "name" : "http",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "80",
+    "protocol" : "HTTP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 60,
+      "use-default-timeout" : false,
+      "default-timeout" : 60
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "Hypertext Transfer Protocol",
+    "color" : "forest green",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642035069,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642035069,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "97aeb443-9aea-11d5-bd16-0090272ccb30",
+    "name" : "https",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "443",
+    "protocol" : "ENC-HTTP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 60,
+      "use-default-timeout" : false,
+      "default-timeout" : 60
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "HTTP protocol over TLS/SSL",
+    "color" : "red",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642037415,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642037415,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "97aeb433-9aea-11d5-bd16-0090272ccb30",
+    "name" : "ldap",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "389",
+    "protocol" : "LDAP-TCP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 600,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "Lightweight Directory Access Protocol",
+    "color" : "black",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642037157,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642037157,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "97aeb434-9aea-11d5-bd16-0090272ccb30",
+    "name" : "ldap-ssl",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "636",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 600,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "Lightweight Directory Access Protocol over TLS/SSL",
+    "color" : "black",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642037180,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642037180,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "ced7ba46-1e36-48ad-b527-521a63e8cb05",
+    "name" : "ldap_udp",
+    "type" : "service-udp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "accept-replies" : true,
+    "port" : "389",
+    "protocol" : "LDAP-UDP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 40,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "sync-connections-on-cluster" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 15,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "LDAP udp service",
+    "color" : "black",
+    "icon" : "Services/UDPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642039835,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642039835,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "5a8d1edc-a1f8-4557-bb2c-8ec083a0a362",
+    "name" : "net_admin",
+    "type" : "network",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "broadcast" : "allow",
+    "subnet4" : "192.168.1.0",
+    "mask-length4" : 24,
+    "subnet-mask" : "255.255.255.0",
+    "nat-settings" : {
+      "auto-rule" : false
+    },
+    "comments" : "",
+    "color" : "black",
+    "icon" : "NetworkObjects/network",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698734119827,
+        "iso-8601" : "2023-10-31T06:35+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698734119827,
+        "iso-8601" : "2023-10-31T06:35+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "29e53e3d-23bf-48fe-b6b1-d59bd88036f9",
+    "name" : "None",
+    "type" : "Track",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "color" : "none",
+    "meta-info" : {
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642045721,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642045721,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "tags" : [ ],
+    "icon" : "General/globalsNone",
+    "comments" : "No tracking.",
+    "customFields" : null
+  }, {
+    "uid" : "046845ed-25bd-4f72-9220-63ade5c37cc9",
+    "name" : "NSG_Default",
+    "type" : "group",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "members" : [ ],
+    "comments" : "",
+    "color" : "black",
+    "icon" : "General/group",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698733826493,
+        "iso-8601" : "2023-10-31T06:30+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698733826493,
+        "iso-8601" : "2023-10-31T06:30+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "2e653aac-3810-4e14-abc1-c4aa89762bec",
+    "name" : "NSG_WebDemo",
+    "type" : "group",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "members" : [ ],
+    "comments" : "",
+    "color" : "black",
+    "icon" : "General/group",
+    "tags" : [ {
+      "uid" : "5f1e6f05-38bb-4247-b860-469cb7006881",
+      "name" : "RG:rg-nsg1",
+      "type" : "tag",
+      "domain" : {
+        "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+        "name" : "SMC User",
+        "domain-type" : "domain"
+      },
+      "comments" : "",
+      "color" : "black",
+      "icon" : "Tags/Tag",
+      "tags" : [ ],
+      "meta-info" : {
+        "lock" : "unlocked",
+        "validation-state" : "ok",
+        "last-modify-time" : {
+          "posix" : 1698822542774,
+          "iso-8601" : "2023-11-01T07:09+0000"
+        },
+        "last-modifier" : "mkoldov@checkpoint.com",
+        "creation-time" : {
+          "posix" : 1698822542774,
+          "iso-8601" : "2023-11-01T07:09+0000"
+        },
+        "creator" : "mkoldov@checkpoint.com"
+      },
+      "read-only" : false,
+      "available-actions" : {
+        "edit" : "true",
+        "delete" : "true",
+        "clone" : "true"
+      }
+    } ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698822545545,
+        "iso-8601" : "2023-11-01T07:09+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698754312650,
+        "iso-8601" : "2023-10-31T12:11+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "97aeb403-9aea-11d5-bd16-0090272ccb30",
+    "name" : "ntp-tcp",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "123",
+    "protocol" : "NTP-TCP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 600,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "Network Time Protocol (TCP)",
+    "color" : "black",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642036221,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642036221,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "97aeb404-9aea-11d5-bd16-0090272ccb30",
+    "name" : "ntp-udp",
+    "type" : "service-udp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "accept-replies" : true,
+    "port" : "123",
+    "protocol" : "NTP-UDP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 40,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "sync-connections-on-cluster" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 15,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "Network Time Protocol (UDP)",
+    "color" : "black",
+    "icon" : "Services/UDPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642036255,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642036255,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "6c488338-8eec-4103-ad21-cd461ac2c476",
+    "name" : "Policy Targets",
+    "type" : "Global",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "color" : "none",
+    "meta-info" : {
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642045629,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642045629,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "tags" : [ ],
+    "icon" : "General/globalsAny",
+    "comments" : "The policy target gateways",
+    "customFields" : null
+  }, {
+    "uid" : "e5d744ad-e952-4999-a3b9-3d3130c70479",
+    "name" : "Remote_Desktop_Protocol",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "3389",
+    "protocol" : "RDP-TCP",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 600,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "Microsoft RDP",
+    "color" : "black",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642039737,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642039737,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "3cca9b3c-2ba3-4acb-9abd-5d75c3c43175",
+    "name" : "ServiceTag_AzureActiveDirectory",
+    "type" : "group",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "members" : [ ],
+    "comments" : "",
+    "color" : "black",
+    "icon" : "General/group",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698821060330,
+        "iso-8601" : "2023-11-01T06:44+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698821060330,
+        "iso-8601" : "2023-11-01T06:44+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "d47e2609-d0ce-4c83-abb8-295abe6c81f5",
+    "name" : "ServiceTag_VirtualNetwork",
+    "type" : "group",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "members" : [ ],
+    "comments" : "",
+    "color" : "black",
+    "icon" : "General/group",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698821092533,
+        "iso-8601" : "2023-11-01T06:44+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698821092533,
+        "iso-8601" : "2023-11-01T06:44+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "18ec9eaa-1657-4240-ab97-5f234623336b",
+    "name" : "ssh",
+    "type" : "service-tcp",
+    "domain" : {
+      "uid" : "a0bbbc99-adef-4ef8-bb6d-defdefdefdef",
+      "name" : "Check Point Data",
+      "domain-type" : "data domain"
+    },
+    "enable-tcp-resource" : false,
+    "sync-connections-on-cluster" : true,
+    "use-delayed-sync" : false,
+    "delayed-sync-value" : 30,
+    "port" : "22",
+    "match-by-protocol-signature" : false,
+    "override-default-settings" : false,
+    "session-timeout" : 3600,
+    "use-default-session-timeout" : true,
+    "match-for-any" : true,
+    "aggressive-aging" : {
+      "enable" : true,
+      "timeout" : 600,
+      "use-default-timeout" : true,
+      "default-timeout" : 0
+    },
+    "keep-connections-open-after-policy-installation" : false,
+    "comments" : "secure shell, encrypted and authenticated rsh",
+    "color" : "red",
+    "icon" : "Services/TCPService",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1668642034089,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "last-modifier" : "System",
+      "creation-time" : {
+        "posix" : 1668642034089,
+        "iso-8601" : "2022-11-16T23:40+0000"
+      },
+      "creator" : "System"
+    },
+    "read-only" : true,
+    "available-actions" : {
+      "edit" : "false",
+      "delete" : "false",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "cbfe9a6a-9900-466f-9f2b-a5f13346acad",
+    "name" : "tak.cesnet.cz",
+    "type" : "host",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "ipv4-address" : "195.113.144.23",
+    "interfaces" : [ ],
+    "nat-settings" : {
+      "auto-rule" : false
+    },
+    "comments" : "",
+    "color" : "black",
+    "icon" : "Objects/host",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698754673471,
+        "iso-8601" : "2023-10-31T12:17+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698754673471,
+        "iso-8601" : "2023-10-31T12:17+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  }, {
+    "uid" : "11284d74-580a-495f-8419-325103050837",
+    "name" : "tik.cesnet.cz",
+    "type" : "host",
+    "domain" : {
+      "uid" : "41e821a0-3720-11e3-aa6e-0800200c9fde",
+      "name" : "SMC User",
+      "domain-type" : "domain"
+    },
+    "ipv4-address" : "195.113.144.201",
+    "interfaces" : [ ],
+    "nat-settings" : {
+      "auto-rule" : false
+    },
+    "comments" : "",
+    "color" : "black",
+    "icon" : "Objects/host",
+    "tags" : [ ],
+    "meta-info" : {
+      "lock" : "unlocked",
+      "validation-state" : "ok",
+      "last-modify-time" : {
+        "posix" : 1698754642644,
+        "iso-8601" : "2023-10-31T12:17+0000"
+      },
+      "last-modifier" : "mkoldov@checkpoint.com",
+      "creation-time" : {
+        "posix" : 1698754642644,
+        "iso-8601" : "2023-10-31T12:17+0000"
+      },
+      "creator" : "mkoldov@checkpoint.com"
+    },
+    "read-only" : false,
+    "available-actions" : {
+      "edit" : "true",
+      "delete" : "true",
+      "clone" : "true"
+    }
+  } ],
+  "from" : 1,
+  "to" : 12,
+  "total" : 12
+}
