@@ -4,6 +4,7 @@ import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
 
 const flags = parse(Deno.args, {
   boolean: ["help", "s1c"],
+  string: ["package"],
   default: { color: true },
 });
 // console.log("Wants help?", flags.help);
@@ -66,6 +67,12 @@ async function loadPolicyFromS1C(packageName) {
       }),
     });
     const rulebase = await showAccessRulebaseResponse.json();
+
+    // console.log('rulebase', rulebase);
+    if (rulebase.code) {
+      console.error('Failed to load rulebase', rulebase.message);
+      return null;
+    }
 
     const { objectsByUid, objectsByTypeAndName } = processLoadedRulebase(rulebase);
     return { rulebase, objectsByUid, objectsByTypeAndName };
@@ -331,7 +338,8 @@ async function main() {
 
   let rulebaseData = null;
   if (flags.s1c) {
-    rulebaseData = await loadPolicyFromS1C("NSG");
+    const packageName = flags.package || "NSG";
+    rulebaseData = await loadPolicyFromS1C(packageName);
   } else {
     rulebaseData = await loadCpRulebase(DEMO_FILE);
   }

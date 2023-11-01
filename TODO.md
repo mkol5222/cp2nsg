@@ -7,8 +7,8 @@
 
 - [x] support both Smart-1 Cloud (supported) as well as regular management API (to do)
 - [x] support management API auth with user+pass too (vs. just API key)
-- [ ] handle policy package not found
-- [ ] allow to specify other policy package than default "NSG"
+- [x] handle policy package not found
+- [x] allow to specify other policy package than default "NSG" - e.g. via --package option
 - [ ] handle self-signed API service certificate (other than deno run --unsafely-ignore-certificate-errors )
 - [x] handle group of services - e.g. dns
 
