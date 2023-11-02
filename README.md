@@ -16,7 +16,10 @@ winget install -e DenoLand.Deno
 code .env
 
 # fetch policy and save as Terraform code
-deno run --allow-net --allow-read .\convert\convert.ts --s1c | Set-Content .\tf-nsgs\generated-nsgs.tf
+# bash
+deno run --allow-net --allow-read ./convert/convert.ts --s1c | tee ./tf-nsgs/generated-nsgs.tf
+# pwsh
+deno run --allow-net --allow-read ./convert/convert.ts --s1c | Set-Content .\tf-nsgs\generated-nsgs.tf
 
 # review result
 code .\tf-nsgs\generated-nsgs.tf

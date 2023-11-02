@@ -1,6 +1,21 @@
 import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
 import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
 
+// type for JSON inputs
+type JSONValue =
+    | string
+    | number
+    | boolean
+    | JSONObject
+    | JSONArray;
+
+interface JSONObject {
+    [x: string]: JSONValue;
+}
+
+// deno-lint-ignore no-empty-interface
+interface JSONArray extends Array<JSONValue> { }
+
 
 const flags = parse(Deno.args, {
   boolean: ["help", "s1c"],
@@ -17,7 +32,7 @@ const SERVICETAG_PREFIX = "ServiceTag_";
 const NSG_PREFIX = "NSG_";
 
 
-async function loadPolicyFromS1C(packageName) {
+async function loadPolicyFromS1C(packageName: string) {
   const env = await load();
   const cpserver = env["CPSERVER"] || 'use-yourownserver.local';
   const cptenant = env["CPTENANT"] || 'use-yourowntenant';
@@ -84,7 +99,7 @@ async function loadPolicyFromS1C(packageName) {
   return null;
 }
 
-function processLoadedRulebase(rulebase) {
+function processLoadedRulebase(rulebase: JSONValue) {
   const rawObjects = rulebase["objects-dictionary"];
 
   // organize objects by uid for easier access
