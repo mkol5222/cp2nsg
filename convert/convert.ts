@@ -4,6 +4,8 @@ import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
 type ServiceElement = string | Array<ServiceElement>;
 type Services =  Array<ServiceElement>;
 
+type NsgDirection = "Inbound" | "Outbound";
+
 // type for JSON inputs
 type JSONValue =
     | string
@@ -241,16 +243,17 @@ function flatRules(rulebase: any): [any] {
   return rules;
 }
 
-function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: string]: JSONObject }) {
-  return unique(
+function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: string]: JSONObject }): Array<string> {
+  const nsgNames =  unique(
     objectUids
       .map((uid) => objectsByUid[uid]) // get objects by uid
       .filter((o) => o.type === "group" && (o.name as string).startsWith(NSG_PREFIX)) // network group name starts with NSG_
       .map((o) => (o.name as string).slice(4)), // remove NSG_ prefix
-  );
+  ) as Array<string>;
+  return nsgNames;
 }
 
-function processRule(rule, direction, nsgName, objectsByUid: { [uid: string]: JSONObject }) {
+function processRule(rule, direction: NsgDirection, nsgName, objectsByUid: { [uid: string]: JSONObject }) {
   const ruleData = {};
 
   ruleData.nsg_Direction = direction;
@@ -297,10 +300,10 @@ function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
   // NSG names
   const allSorceNsgs = nsgsFromObjectUids(allSources, objectsByUid);
   const allDestinationNsgs = nsgsFromObjectUids(allDestinations, objectsByUid);
-  const allNsgs = unique([...allSorceNsgs, ...allDestinationNsgs]);
+  const allNsgs = unique([...allSorceNsgs, ...allDestinationNsgs]) as Array<string>;
 
   // RGs for NSGs:
-  const rgByNsg = {};
+  const rgByNsg:  { [name: string]: string } = {};
   for (const nsg of allNsgs) {
     const nsgObj = objectsByTypeAndName[`group/NSG_${nsg}`];
     // console.log('nsgObj tags', nsgObj.tags);
@@ -397,7 +400,7 @@ function servicesByProtocol(services) {
     }));
 }
 
-function generateTerraformNSGRules(rules, rgByNsg) {
+function generateTerraformNSGRules(rules, rgByNsg: { [nsgName: string]: string }) {
   let priority = 100;
   for (const rule of rules) {
     //console.log(rule);
