@@ -11,3 +11,7 @@
 * support Azure Service Tags in source/destination
 * bugfix: skip disabled rules
 
+
+#### 2023-11-02
+* option --print to produce rule summary (vs Terraform code)
+

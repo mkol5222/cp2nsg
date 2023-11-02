@@ -2,20 +2,20 @@ import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
 import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
 
 type ServiceElement = string | Array<ServiceElement>;
-type Services =  Array<ServiceElement>;
+type Services = Array<ServiceElement>;
 
 type NsgDirection = "Inbound" | "Outbound";
 
 // type for JSON inputs
 type JSONValue =
-    | string
-    | number
-    | boolean
-    | JSONObject
-    | JSONArray;
+  | string
+  | number
+  | boolean
+  | JSONObject
+  | JSONArray;
 
 interface JSONObject {
-    [x: string]: JSONValue;
+  [x: string]: JSONValue;
 }
 
 // deno-lint-ignore no-empty-interface
@@ -23,7 +23,7 @@ interface JSONArray extends Array<JSONValue> { }
 
 
 const flags = parse(Deno.args, {
-  boolean: ["help", "s1c"],
+  boolean: ["help", "s1c", "print"],
   string: ["package"],
   default: { color: true },
 });
@@ -60,7 +60,7 @@ async function loadPolicyFromS1C(packageName: string) {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ 
+    body: JSON.stringify({
       ...cpCreds
     }),
   });
@@ -105,7 +105,7 @@ async function loadPolicyFromS1C(packageName: string) {
 }
 
 function processLoadedRulebase(rulebase: JSONValue) {
-  
+
   type RulebaseKey = keyof typeof rulebase;
   const rawObjects: Array<JSONValue> = rulebase["objects-dictionary" as RulebaseKey];
 
@@ -159,15 +159,15 @@ function processAction(actionUid: string, objectsByUid: { [uid: string]: JSONObj
 
 function processServiceObject(service: JSONObject, objectsByUid: { [uid: string]: JSONObject }): Services {
 
-  console.log('# service', service.name, service.type);
-  
+  // console.log('# service', service.name, service.type);
+
   if (service.type === "CpmiAnyObject" && service.name === "Any") return ["*"];
   if (service.type === "service-tcp") return [`${service.port}/Tcp`];
   if (service.type === "service-udp") return [`${service.port}/Udp`];
 
   if (service.type === "service-group") {
     const members: Array<JSONObject> = service.members as Array<JSONObject>;
-    const services = members.map((member) => processServiceObject(member, objectsByUid) );
+    const services = members.map((member) => processServiceObject(member, objectsByUid));
     // console.log('service group', services);
     return services;
   }
@@ -244,7 +244,7 @@ function flatRules(rulebase: any): [any] {
 }
 
 function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: string]: JSONObject }): Array<string> {
-  const nsgNames =  unique(
+  const nsgNames = unique(
     objectUids
       .map((uid) => objectsByUid[uid]) // get objects by uid
       .filter((o) => o.type === "group" && (o.name as string).startsWith(NSG_PREFIX)) // network group name starts with NSG_
@@ -253,44 +253,48 @@ function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: str
   return nsgNames;
 }
 
-function processRule(rule, direction: NsgDirection, nsgName, objectsByUid: { [uid: string]: JSONObject }) {
-  const ruleData = {};
+type NSGData = {
+  nsg_Direction: NsgDirection
+  nsg_Services: Services,
+  nsg_SourceAddresses: Array<string>,
+  nsg_DestinationAddresses: Array<string>,
+  nsg_Action: "Allow" | "Deny",
+  nsg_NsgName: string,
+  nsg_Description: string,
+  nsg_RuleNo: number
+}
 
-  ruleData.nsg_Direction = direction;
+function processRule(rule: JSONObject, direction: NsgDirection, nsgName: string, objectsByUid: { [uid: string]: JSONObject }) {
+  const ruleData: NSGData = {
+    nsg_Direction: direction,
+    nsg_Services: (rule.service as Array<string>).flatMap((serviceUid: string) => {
+      return processService(serviceUid, objectsByUid);
+    }),
+    nsg_SourceAddresses: (rule.source as Array<string>).map((sourceUid: string) =>
+      processNetworkObject(sourceUid, objectsByUid)
+    ),
+    nsg_DestinationAddresses: (rule.destination as Array<string>).map((destinationUid: string) =>
+      processNetworkObject(destinationUid, objectsByUid)
+    ),
+    nsg_Action: processAction(rule.action as string, objectsByUid) === "Accept" ? "Allow" : "Deny",
+    nsg_RuleNo: rule["rule-number"] as number,
+    nsg_NsgName: nsgName,
+    nsg_Description: rule.name as string
+  };
 
-  ruleData.nsg_Services = rule.service.flatMap((service) => {
-    return processService(service, objectsByUid);
-  });
-
-  ruleData.nsg_SourceAddresses = rule.source.map((source) =>
-    processNetworkObject(source, objectsByUid)
-  );
-
-  ruleData.nsg_DestinationAddresses = rule.destination.map((destination) =>
-    processNetworkObject(destination, objectsByUid)
-  );
-
-  ruleData.nsg_Action = processAction(rule.action, objectsByUid);
-  ruleData.nsg_Action = ruleData.nsg_Action === "Accept" ? "Allow" : "Deny";
-
-  ruleData.nsg_RuleNo = rule["rule-number"];
-
-  ruleData.nsg_NsgName = nsgName;
-
-  ruleData.nsg_Description = rule.name;
 
   return ruleData;
 }
 
-function unique(array) {
+function unique(array: Array<any>) {
   return Array.from(new Set(array));
 }
 
-function uidsIncludeNSG(uids, nsgName, objectsByUid: { [uid: string]: JSONObject }) {
+function uidsIncludeNSG(uids: Array<string>, nsgName: string, objectsByUid: { [uid: string]: JSONObject }) {
   return uids.map((uid) => objectsByUid[uid].name).includes(`NSG_${nsgName}`);
 }
 
-function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
+function processRules(rulebase: Array<JSONObject>, objectsByUid: { [uid: string]: JSONObject }, objectsByTypeAndName: { [uid: string]: JSONObject }) {
   const rules = flatRules(rulebase);
 
   // need all sources and all destination UIDs to find NSG names
@@ -303,14 +307,14 @@ function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
   const allNsgs = unique([...allSorceNsgs, ...allDestinationNsgs]) as Array<string>;
 
   // RGs for NSGs:
-  const rgByNsg:  { [name: string]: string } = {};
+  const rgByNsg: { [name: string]: string } = {};
   for (const nsg of allNsgs) {
     const nsgObj = objectsByTypeAndName[`group/NSG_${nsg}`];
     // console.log('nsgObj tags', nsgObj.tags);
-    for (const tag of nsgObj.tags) {
+    for (const tag of nsgObj.tags as Array<JSONObject>) {
       // console.log('nsgObj tags', tag.name);
-      if (tag.name.startsWith('RG:')) {
-        rgByNsg[nsg] = tag.name.slice(3);
+      if ((tag.name as string).startsWith('RG:')) {
+        rgByNsg[nsg] = (tag.name as string).slice(3);
       }
     }
   }
@@ -346,7 +350,7 @@ function processRules(rulebase, objectsByUid, objectsByTypeAndName) {
   };
 }
 
-function printRules(rules) {
+function printRules(rules: NSGData[]) {
   for (const rule of rules) {
     console.log(
       `${rule.nsg_RuleNo} ${rule.nsg_Direction}: ${JSON.stringify(rule.nsg_SourceAddresses)
@@ -384,7 +388,17 @@ async function main() {
   //     printRules(nsgData.nsgOutgoingRules);
   //   }
 
-  generateTerraform(rules);
+  if (flags.print) {
+    for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
+      console.log("");
+      console.log(`${nsgIndex}. ${nsgData.nsgName}`);
+      //console.log(nsgData);
+      printRules(nsgData.nsgIncomingRules);
+      printRules(nsgData.nsgOutgoingRules);
+    }
+  } else {
+    generateTerraform(rules);
+  }
   //console.log(rules.nsgRulebases)
 }
 
@@ -400,7 +414,7 @@ function servicesByProtocol(services) {
     }));
 }
 
-function generateTerraformNSGRules(rules, rgByNsg: { [nsgName: string]: string }) {
+function generateTerraformNSGRules(rules: NSGData[], rgByNsg: { [nsgName: string]: string }) {
   let priority = 100;
   for (const rule of rules) {
     //console.log(rule);
