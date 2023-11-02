@@ -167,7 +167,7 @@ function processServiceObject(service: JSONObject, objectsByUid: { [uid: string]
 
   if (service.type === "service-group") {
     const members: Array<JSONObject> = service.members as Array<JSONObject>;
-    const services = members.map((member) => processServiceObject(member, objectsByUid));
+    const services = members.flatMap((member) => processServiceObject(member, objectsByUid));
     // console.log('service group', services);
     return services;
   }
@@ -417,6 +417,7 @@ function servicesByProtocol(services: Array<string>) {
     proto: service.split("/")[1],
     port: parseInt(service.split("/")[0]),
   }));
+
   return Object.entries(Object.groupBy(serviceObjects, ({ proto }) => proto))
     .map(([proto, services]) => ({
       proto,

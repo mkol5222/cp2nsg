@@ -30,7 +30,6 @@ code .\tf-nsgs\generated-nsgs.tf
 cd .\tf-nsgs\
 terraform init
 terraform apply 
-
 ```
 
 Smart-1 Cloud setup in .env
