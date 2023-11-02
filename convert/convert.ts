@@ -255,7 +255,7 @@ function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: str
 
 type NSGData = {
   nsg_Direction: NsgDirection
-  nsg_Services: Services,
+  nsg_Services: Array<string>,
   nsg_SourceAddresses: Array<string>,
   nsg_DestinationAddresses: Array<string>,
   nsg_Action: "Allow" | "Deny",
@@ -269,7 +269,7 @@ function processRule(rule: JSONObject, direction: NsgDirection, nsgName: string,
     nsg_Direction: direction,
     nsg_Services: (rule.service as Array<string>).flatMap((serviceUid: string) => {
       return processService(serviceUid, objectsByUid);
-    }),
+    }) as Array<string>,
     nsg_SourceAddresses: (rule.source as Array<string>).map((sourceUid: string) =>
       processNetworkObject(sourceUid, objectsByUid)
     ),
@@ -294,7 +294,17 @@ function uidsIncludeNSG(uids: Array<string>, nsgName: string, objectsByUid: { [u
   return uids.map((uid) => objectsByUid[uid].name).includes(`NSG_${nsgName}`);
 }
 
-function processRules(rulebase: Array<JSONObject>, objectsByUid: { [uid: string]: JSONObject }, objectsByTypeAndName: { [uid: string]: JSONObject }) {
+type ProcessRulesResult = {
+  allNsgs: Array<string>,
+  nsgRulebases: Array<{
+    nsgName: string,
+    nsgOutgoingRules: Array<NSGData>,
+    nsgIncomingRules: Array<NSGData>
+  }>,
+  rgByNsg: { [name: string]: string }
+}
+
+function processRules(rulebase: Array<JSONObject>, objectsByUid: { [uid: string]: JSONObject }, objectsByTypeAndName: { [uid: string]: JSONObject }): ProcessRulesResult {
   const rules = flatRules(rulebase);
 
   // need all sources and all destination UIDs to find NSG names
@@ -378,7 +388,7 @@ async function main() {
 
   const { rulebase, objectsByUid, objectsByTypeAndName } = rulebaseData!;
 
-  const rules = processRules(rulebase, objectsByUid, objectsByTypeAndName);
+  const processRulesRes: ProcessRulesResult = processRules(rulebase, objectsByUid, objectsByTypeAndName);
 
   //   for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
   //     console.log("");
@@ -389,7 +399,7 @@ async function main() {
   //   }
 
   if (flags.print) {
-    for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
+    for (const [nsgIndex, nsgData] of Object.entries<any>(processRulesRes.nsgRulebases)) {
       console.log("");
       console.log(`${nsgIndex}. ${nsgData.nsgName}`);
       //console.log(nsgData);
@@ -397,12 +407,12 @@ async function main() {
       printRules(nsgData.nsgOutgoingRules);
     }
   } else {
-    generateTerraform(rules);
+    generateTerraform(processRulesRes);
   }
   //console.log(rules.nsgRulebases)
 }
 
-function servicesByProtocol(services) {
+function servicesByProtocol(services: Array<string>) {
   const serviceObjects = services.map((service) => ({
     proto: service.split("/")[1],
     port: parseInt(service.split("/")[0]),
