@@ -13,6 +13,9 @@
 - [x] handle group of services - e.g. dns
 - [x] add support for DevContainer/Codespaces
 
+- [ ] improve code with Typescript types
+- [ ] types - avoid JSONObject where relevant
+
 - [ ] SmartConsole Extension to start "Install NSG" workflow
 - [ ] CI/CD pipeline managing changes to NSGs automatically (generate&commit to terraform apply)
 

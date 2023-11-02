@@ -1,6 +1,9 @@
 import { parse } from "https://deno.land/std@0.202.0/flags/mod.ts";
 import { load } from "https://deno.land/std@0.204.0/dotenv/mod.ts";
 
+type ServiceElement = string | Array<ServiceElement>;
+type Services =  Array<ServiceElement>;
+
 // type for JSON inputs
 type JSONValue =
     | string
@@ -100,7 +103,9 @@ async function loadPolicyFromS1C(packageName: string) {
 }
 
 function processLoadedRulebase(rulebase: JSONValue) {
-  const rawObjects = rulebase["objects-dictionary"];
+  
+  type RulebaseKey = keyof typeof rulebase;
+  const rawObjects: Array<JSONValue> = rulebase["objects-dictionary" as RulebaseKey];
 
   // organize objects by uid for easier access
   const objectsByUid = rawObjects.reduce(
@@ -144,22 +149,23 @@ async function loadCpRulebase(filename: string) {
   return null;
 }
 
-function processAction(actionUid, objectsByUid) {
+function processAction(actionUid: string, objectsByUid: { [uid: string]: JSONObject }) {
   const action = objectsByUid[actionUid];
 
   return action.name;
 }
 
-function processServiceObject(service, objectsByUid) {
+function processServiceObject(service: JSONObject, objectsByUid: { [uid: string]: JSONObject }): Services {
 
   console.log('# service', service.name, service.type);
   
-  if (service.type === "CpmiAnyObject" && service.name === "Any") return "*";
-  if (service.type === "service-tcp") return `${service.port}/Tcp`;
-  if (service.type === "service-udp") return `${service.port}/Udp`;
+  if (service.type === "CpmiAnyObject" && service.name === "Any") return ["*"];
+  if (service.type === "service-tcp") return [`${service.port}/Tcp`];
+  if (service.type === "service-udp") return [`${service.port}/Udp`];
 
   if (service.type === "service-group") {
-    const services = service.members.map((member) => processServiceObject(member, objectsByUid) );
+    const members: Array<JSONObject> = service.members as Array<JSONObject>;
+    const services = members.map((member) => processServiceObject(member, objectsByUid) );
     // console.log('service group', services);
     return services;
   }
@@ -167,17 +173,17 @@ function processServiceObject(service, objectsByUid) {
   // console.error("Unknown service type", service.type, service.name);
   // console.log('details:', JSON.stringify(service, null, 2));
 
-  return [service];
+  return [`service-${service.type}-${service.name}`];
 
 }
 
-function processService(serviceUid, objectsByUid) {
+function processService(serviceUid: string, objectsByUid: { [uid: string]: JSONObject }): Services {
   const service = objectsByUid[serviceUid];
   return processServiceObject(service, objectsByUid);
   // console.log('service details:', JSON.stringify(service, null, 2));
 }
 
-function processNetworkObject(networkObjectId, objectsByUid) {
+function processNetworkObject(networkObjectId: string, objectsByUid: { [uid: string]: JSONObject }): string {
   const networkObject = objectsByUid[networkObjectId];
 
   // log
@@ -189,9 +195,10 @@ function processNetworkObject(networkObjectId, objectsByUid) {
   //   console.log('SERVICETAG_PREFIX:', networkObject.name);
   // }
 
-  if (networkObject.type === "group" && networkObject.name.startsWith(SERVICETAG_PREFIX)) {
+  const objectName: string = networkObject.name as string;
+  if (networkObject.type === "group" && objectName.startsWith(SERVICETAG_PREFIX)) {
     // console.log('service tag', networkObject.name.slice(SERVICETAG_PREFIX.length))
-    return networkObject.name.slice(SERVICETAG_PREFIX.length);
+    return objectName.slice(SERVICETAG_PREFIX.length);
   }
 
   if (networkObject.type === "CpmiAnyObject" && networkObject.name === "Any") {
@@ -203,13 +210,11 @@ function processNetworkObject(networkObjectId, objectsByUid) {
   if (networkObject.type === "network") {
     return `${networkObject["subnet4"]}/${networkObject["mask-length4"]}`;
   }
-  if (networkObject.type === "group" && networkObject.name.startsWith(NSG_PREFIX)) {
+  if (networkObject.type === "group" && objectName.startsWith(NSG_PREFIX)) {
     return "*";
   }
 
-
-
-  return networkObject;
+  return `${networkObject.type}_${networkObject.name}`;
 }
 
 /**
@@ -236,16 +241,16 @@ function flatRules(rulebase: any): [any] {
   return rules;
 }
 
-function nsgsFromObjectUids(objectUids, objectsByUid) {
+function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: string]: JSONObject }) {
   return unique(
     objectUids
       .map((uid) => objectsByUid[uid]) // get objects by uid
-      .filter((o) => o.type === "group" && o.name.startsWith(NSG_PREFIX)) // network group name starts with NSG_
-      .map((o) => o.name.slice(4)), // remove NSG_ prefix
+      .filter((o) => o.type === "group" && (o.name as string).startsWith(NSG_PREFIX)) // network group name starts with NSG_
+      .map((o) => (o.name as string).slice(4)), // remove NSG_ prefix
   );
 }
 
-function processRule(rule, direction, nsgName, objectsByUid) {
+function processRule(rule, direction, nsgName, objectsByUid: { [uid: string]: JSONObject }) {
   const ruleData = {};
 
   ruleData.nsg_Direction = direction;
@@ -278,7 +283,7 @@ function unique(array) {
   return Array.from(new Set(array));
 }
 
-function uidsIncludeNSG(uids, nsgName, objectsByUid) {
+function uidsIncludeNSG(uids, nsgName, objectsByUid: { [uid: string]: JSONObject }) {
   return uids.map((uid) => objectsByUid[uid].name).includes(`NSG_${nsgName}`);
 }
 
