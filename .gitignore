@@ -38,3 +38,4 @@ terraform.rc
 # CP TF provider creds
 fingerprints.json
 sid.json
+tf-nsgs/generated-nsgs.tf
