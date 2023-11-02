@@ -107,12 +107,12 @@ async function loadPolicyFromS1C(packageName: string) {
 function processLoadedRulebase(rulebase: JSONValue) {
 
   type RulebaseKey = keyof typeof rulebase;
-  const rawObjects: Array<JSONValue> = rulebase["objects-dictionary" as RulebaseKey];
+  const rawObjects: Array<JSONObject> = rulebase["objects-dictionary" as RulebaseKey];
 
   // organize objects by uid for easier access
   const objectsByUid = rawObjects.reduce(
-    (objectDict: { [uid: string]: any }, obj: any) => {
-      objectDict[obj.uid] = obj;
+    (objectDict: { [uid: string]: JSONObject }, obj: JSONObject) => {
+      objectDict[obj.uid as string] = obj;
       return objectDict;
     },
     {},
@@ -120,7 +120,7 @@ function processLoadedRulebase(rulebase: JSONValue) {
 
   // organize objects by type/name for easier access
   const objectsByTypeAndName = rawObjects.reduce(
-    (objectDict: { [key: string]: any }, obj: any) => {
+    (objectDict: { [key: string]: JSONObject }, obj: JSONObject) => {
       const key = `${obj.type}/${obj.name}`;
       objectDict[key] = obj;
       return objectDict;
@@ -224,23 +224,27 @@ function processNetworkObject(networkObjectId: string, objectsByUid: { [uid: str
  * @param {any} rulebase
  * @returns { [any] } Array of access rules
  */
-function flatRules(rulebase: any): [any] {
+function flatRules(rulebase: JSONObject): JSONObject[] {
   // start from top rulebase top level
-  const rules = rulebase["rulebase"].reduce(
-    (rules: [any], rule: any) => {
+  const topRules: JSONValue[] = rulebase["rulebase"] as JSONValue[];
+  const emptyRulebase: JSONValue[] = [];
+
+  const flatRules = topRules.reduce(
+    (rules: JSONValue[], rule: JSONValue) => {
       // visiting every every section and collecting all rules
-      if (rule.type === "access-section") {
-        for (const r of rule.rulebase) {
+      if ((rule as JSONObject).type === "access-section") {
+        const section = rule as JSONObject;
+        for (const r of section.rulebase as JSONValue[]) {
           rules.push(r);
         }
       }
       // collect top level rules
-      if (rule.type === "access-rule") rules.push(rule);
+      if ((rule as JSONObject).type === "access-rule") rules.push(rule);
       return rules;
     },
-    [],
+    emptyRulebase
   );
-  return rules;
+  return flatRules as JSONObject[];
 }
 
 function nsgsFromObjectUids(objectUids: Array<string>, objectsByUid: { [uid: string]: JSONObject }): Array<string> {
@@ -265,6 +269,8 @@ type NSGData = {
 }
 
 function processRule(rule: JSONObject, direction: NsgDirection, nsgName: string, objectsByUid: { [uid: string]: JSONObject }) {
+
+  const ruleName: string = rule.name ? rule.name as string : "";
   const ruleData: NSGData = {
     nsg_Direction: direction,
     nsg_Services: (rule.service as Array<string>).flatMap((serviceUid: string) => {
@@ -279,13 +285,14 @@ function processRule(rule: JSONObject, direction: NsgDirection, nsgName: string,
     nsg_Action: processAction(rule.action as string, objectsByUid) === "Accept" ? "Allow" : "Deny",
     nsg_RuleNo: rule["rule-number"] as number,
     nsg_NsgName: nsgName,
-    nsg_Description: rule.name as string
+    nsg_Description: ruleName
   };
 
 
   return ruleData;
 }
 
+// deno-lint-ignore no-explicit-any
 function unique(array: Array<any>) {
   return Array.from(new Set(array));
 }
@@ -294,17 +301,20 @@ function uidsIncludeNSG(uids: Array<string>, nsgName: string, objectsByUid: { [u
   return uids.map((uid) => objectsByUid[uid].name).includes(`NSG_${nsgName}`);
 }
 
+type NsgRulebase = {
+  nsgName: string,
+  nsgOutgoingRules: Array<NSGData>,
+  nsgIncomingRules: Array<NSGData>
+}
+
 type ProcessRulesResult = {
   allNsgs: Array<string>,
-  nsgRulebases: Array<{
-    nsgName: string,
-    nsgOutgoingRules: Array<NSGData>,
-    nsgIncomingRules: Array<NSGData>
-  }>,
+  nsgRulebases: Array<NsgRulebase>,
   rgByNsg: { [name: string]: string }
 }
 
-function processRules(rulebase: Array<JSONObject>, objectsByUid: { [uid: string]: JSONObject }, objectsByTypeAndName: { [uid: string]: JSONObject }): ProcessRulesResult {
+function processRules(rulebase: JSONObject, objectsByUid: { [uid: string]: JSONObject }, objectsByTypeAndName: { [uid: string]: JSONObject }): ProcessRulesResult {
+  // console.log("Processing rulebase", rulebase);
   const rules = flatRules(rulebase);
 
   // need all sources and all destination UIDs to find NSG names
@@ -336,12 +346,12 @@ function processRules(rulebase: Array<JSONObject>, objectsByUid: { [uid: string]
 
     const nsgOutgoingRules = rules
       .filter((rule => rule.enabled))
-      .filter((rule) => uidsIncludeNSG(rule.source, nsgName, objectsByUid)) // nsgName in source
+      .filter((rule) => uidsIncludeNSG(rule.source as string[], nsgName, objectsByUid)) // nsgName in source
       .map((rule) => processRule(rule, "Outbound", nsgName, objectsByUid));
 
     const nsgIncomingRules = rules
       .filter((rule => rule.enabled))
-      .filter((rule) => uidsIncludeNSG(rule.destination, nsgName, objectsByUid)) // nsgName in dst
+      .filter((rule) => uidsIncludeNSG(rule.destination as string[], nsgName, objectsByUid)) // nsgName in dst
       .map((rule) => processRule(rule, "Inbound", nsgName, objectsByUid));
 
     // for (const rule of [...nsgOutgoingRules, ...nsgIncomingRules]) {
@@ -399,7 +409,7 @@ async function main() {
   //   }
 
   if (flags.print) {
-    for (const [nsgIndex, nsgData] of Object.entries<any>(processRulesRes.nsgRulebases)) {
+    for (const [nsgIndex, nsgData] of Object.entries<NsgRulebase>(processRulesRes.nsgRulebases)) {
       console.log("");
       console.log(`${nsgIndex}. ${nsgData.nsgName}`);
       //console.log(nsgData);
@@ -412,17 +422,32 @@ async function main() {
   //console.log(rules.nsgRulebases)
 }
 
-function servicesByProtocol(services: Array<string>) {
-  const serviceObjects = services.map((service) => ({
+type ServiceObject = {
+  proto: string,
+  port: number
+}
+
+type ServiceObjectPortsGroupped = {
+  proto: string,
+  ports: number[]
+}
+
+function servicesByProtocol(services: Array<string>): ServiceObjectPortsGroupped[] {
+  const serviceObjects: Array<ServiceObject> = services.map((service) => ({
     proto: service.split("/")[1],
     port: parseInt(service.split("/")[0]),
   }));
 
-  return Object.entries(Object.groupBy(serviceObjects, ({ proto }) => proto))
+  // https://github.com/denoland/deno/pull/21050 fixed in Deno 1.38
+  
+  const result = Object.entries(Object.groupBy(serviceObjects, ({ proto }: ServiceObject) => proto))
     .map(([proto, services]) => ({
       proto,
-      ports: services.map(({ port }) => port),
-    }));
+      ports: (services as Array<ServiceObject>).map(({ port }: ServiceObject) => port),
+    } ));
+
+    // console.log('result', result)
+    return result;
 }
 
 function generateTerraformNSGRules(rules: NSGData[], rgByNsg: { [nsgName: string]: string }) {
@@ -433,12 +458,12 @@ function generateTerraformNSGRules(rules: NSGData[], rgByNsg: { [nsgName: string
     const servicesByProto = servicesByProtocol(rule.nsg_Services);
     // console.log('servicesByProto', servicesByProto);
 
-    for (const [index, portsByProto] of Object.entries<any>(servicesByProto)) {
-      // console.log("proto", index, portsByProto.proto, portsByProto.ports);
+    for (const  [_index , portsByProto] of Object.entries(servicesByProto)) {
+      // console.log("proto", _index, portsByProto.proto, portsByProto.ports);
 
       const ruleNo = priority++;
 
-      let ports = ["*"];
+      let ports: Array<"*" | number> = ["*"];
       let proto = "Any";
 
       if (portsByProto.proto !== "undefined") {
@@ -490,7 +515,7 @@ function generateTerraformNSGRules(rules: NSGData[], rgByNsg: { [nsgName: string
   }
 }
 
-function generateTerraform(rules) {
+function generateTerraform(rules: ProcessRulesResult) {
 
   const { rgByNsg } = rules;
 
@@ -502,7 +527,7 @@ function generateTerraform(rules) {
       }
     `);
 
-  for (const [nsgIndex, nsgData] of Object.entries<any>(rules.nsgRulebases)) {
+  for (const [nsgIndex, nsgData] of Object.entries<NsgRulebase>(rules.nsgRulebases)) {
     console.log("");
     console.log(`# ${nsgIndex}. ${nsgData.nsgName}`);
 

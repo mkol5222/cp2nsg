@@ -13,8 +13,8 @@
 - [x] handle group of services - e.g. dns
 - [x] add support for DevContainer/Codespaces
 
-- [ ] print view - fix "undefined" when there is no rule name in SmartConsole
-- [ ] improve code with Typescript types
+- [x] print view - fix "undefined" when there is no rule name in SmartConsole
+- [x] improve code with Typescript types
 - [ ] types - avoid JSONObject where relevant
 
 - [ ] SmartConsole Extension to start "Install NSG" workflow
