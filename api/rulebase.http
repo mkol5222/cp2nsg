@@ -27,3 +27,31 @@ Content-Type: application/json
 X-chkp-sid: {{login.response.body.sid}}
 
 {}
+
+###
+
+POST https://{{cpserver}}/{{cptenant}}/web_api/show-services-tcp
+Content-Type: application/json
+X-chkp-sid: {{login.response.body.sid}}
+
+{
+    "limit": 500
+}
+###
+
+POST https://{{cpserver}}/{{cptenant}}/web_api/show-services-udp
+Content-Type: application/json
+X-chkp-sid: {{login.response.body.sid}}
+
+{
+    "limit": 500
+}
+
+###
+POST https://{{cpserver}}/{{cptenant}}/web_api/show-services-compound-tcp
+Content-Type: application/json
+X-chkp-sid: {{login.response.body.sid}}
+
+{
+    "limit": 500
+}

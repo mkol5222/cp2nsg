@@ -17,8 +17,17 @@
 - [x] improve code with Typescript types
 - [ ] types - avoid JSONObject where relevant
 
+- [ ] NSG rule by Install On column - e.g. NSG_Inbound_name, NSG_Outbound_name
+- [ ] section header to set subscription and resource group
+
 - [ ] SmartConsole Extension to start "Install NSG" workflow
 - [ ] CI/CD pipeline managing changes to NSGs automatically (generate&commit to terraform apply)
 
 - [ ] research pros and cons of dedicated NSG rule resurces vs inline rules for rulebase updates
 - [ ] NSG rule naming strategy - e.g. based on CP rule uid
+- [ ] set rule priority in SmartConsole rule: Comment column
+- [ ] NSG in multiple resource groups - e.g. by tag on NSG_name object? - tag format RG:rg-nsg1, RG:rg-nsg2 vs nested groups
+- [ ] same name of NSG in multiple subscriptions/RG - with own unique rulesets
+- [ ] NSG location by group in NSG network group object
+- [ ] nested groups in Install On column - subscr/rg/nsg ?
+
